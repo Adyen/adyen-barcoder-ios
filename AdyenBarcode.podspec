@@ -7,10 +7,10 @@ Pod::Spec.new do |s|
 Library to connect and use Verifone Barcode reader over MFi connection
                        DESC
 
-  s.homepage         = 'https://github.com/Adyen/adyen-ios-barcode'
+  s.homepage         = 'https://github.com/Adyen/adyen-ios-barcoder'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Taras Kalapun' => 't.kalapun@gmail.com' }
-  s.source           = { :git => 'https://github.com/Adyen/adyen-ios-barcode.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/Adyen/adyen-ios-barcoder.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
 
