@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AdyenBarcode_Example' do
+  pod 'AdyenBarcode', :path => '../'
+
+  target 'AdyenBarcode_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

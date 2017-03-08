@@ -1,0 +1,16 @@
+PODS:
+  - AdyenBarcode (0.1.0)
+
+DEPENDENCIES:
+  - AdyenBarcode (from `../`)
+
+EXTERNAL SOURCES:
+  AdyenBarcode:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AdyenBarcode: 269994a17d1c4ca05488e061b87977c4dff03448
+
+PODFILE CHECKSUM: fb70bd7e295099b18210124938c3c66967ac6ec9
+
+COCOAPODS: 1.2.0
