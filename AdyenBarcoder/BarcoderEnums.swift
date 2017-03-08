@@ -1,6 +1,6 @@
 //
 //  BarcoderEnums.swift
-//  AdyenBarcode
+//  AdyenBarcoder
 //
 //  Created by Taras Kalapun on 1/26/17.
 //  Copyright © 2017 Adyen. All rights reserved.
@@ -11,13 +11,13 @@ import CoreFoundation
 
 @objc
 public class Barcode: NSObject {
-    public var codeId: AdyenBarcode.CodeId = .Undefined
-    public var aimId: AdyenBarcode.AimId = .Undefined
-    public var symbolId: AdyenBarcode.SymId = .Undefined
+    public var codeId: AdyenBarcoder.CodeId = .Undefined
+    public var aimId: AdyenBarcoder.AimId = .Undefined
+    public var symbolId: AdyenBarcoder.SymId = .Undefined
     public var text: String = ""
 }
 
-public extension AdyenBarcode {
+public extension AdyenBarcoder {
 
     internal enum Resp: UInt32 {
         case ACK    = 0x00000000

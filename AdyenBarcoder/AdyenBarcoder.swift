@@ -1,6 +1,6 @@
 //
-//  AdyenBarcode.swift
-//  AdyenBarcode
+//  AdyenBarcoder.swift
+//  AdyenBarcoder
 //
 //  Created by Taras Kalapun on 1/26/17.
 //  Copyright © 2017 Adyen. All rights reserved.
@@ -14,14 +14,14 @@ public protocol BarcoderDelegate {
     func barcodeReceived(_ barcode: Barcode)
 }
 
-public class AdyenBarcode: NSObject {
+public class AdyenBarcoder: NSObject {
     
-    public static let sharedInstance = AdyenBarcode()
+    public static let sharedInstance = AdyenBarcoder()
     public var delegate: BarcoderDelegate?
     
     public var accessoryConnectedHandler: ((EAAccessory)->Void)?
     public var accessoryDisconnectedHandler: ((Void)->Void)?
-    public var deviceConfigHandler: ((AdyenBarcode)->Void)?
+    public var deviceConfigHandler: ((AdyenBarcoder)->Void)?
     public var logHandler: ((String)->Void)?
     
     public var autoConnect = true
@@ -31,7 +31,7 @@ public class AdyenBarcode: NSObject {
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     
-    var currentCommand: AdyenBarcode.Cmd?
+    var currentCommand: AdyenBarcoder.Cmd?
     
     var opened = false
     var started = false
@@ -96,7 +96,7 @@ public class AdyenBarcode: NSObject {
         if let handler = self.logHandler {
             handler(line)
         }
-        //delegate?.barcodelog(AdyenBarcode: self, log: line)
+        //delegate?.barcodelog(AdyenBarcoder: self, log: line)
     }
     
     public func connectToAccessory(_ accessory: EAAccessory) {
@@ -171,23 +171,23 @@ public class AdyenBarcode: NSObject {
     
     
     
-    func sendCommand(_ cmd: AdyenBarcode.Cmd) {
+    func sendCommand(_ cmd: AdyenBarcoder.Cmd) {
         log("sendCommand \(cmd.rawValue)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
-    func sendCommand<T>(_ cmd: AdyenBarcode.Cmd, parameter: UInt8, _ value: T) {
+    func sendCommand<T>(_ cmd: AdyenBarcoder.Cmd, parameter: UInt8, _ value: T) {
         log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
     
-    public func mSymbology(_ parameter: AdyenBarcode.SymPid, value: UInt8) {
+    public func mSymbology(_ parameter: AdyenBarcoder.SymPid, value: UInt8) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
     }
     
-    func mSymbology(_ parameter: AdyenBarcode.SymPid, data: Data) {
+    func mSymbology(_ parameter: AdyenBarcoder.SymPid, data: Data) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
     }
     
@@ -209,7 +209,7 @@ public class AdyenBarcode: NSObject {
                 self.startScan()
             }
             
-            //self.delegate?.barcodeConnected(AdyenBarcode: self, isConnected: res.result)
+            //self.delegate?.barcodeConnected(AdyenBarcoder: self, isConnected: res.result)
         }
         
         if self.currentCommand == .START_SCAN {
@@ -219,7 +219,7 @@ public class AdyenBarcode: NSObject {
         //self.accessoryStreamer.send(nil)
     }
     
-    func packCommand(_ cmd: AdyenBarcode.Cmd, data: Data?) -> Data {
+    func packCommand(_ cmd: AdyenBarcoder.Cmd, data: Data?) -> Data {
         
         log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString())")
         
@@ -293,7 +293,7 @@ public class AdyenBarcode: NSObject {
             let res = try unpack(format, data)
             log("res: \(res)")
             
-            let status = AdyenBarcode.Resp(rawValue: res[2] as! UInt32)!
+            let status = AdyenBarcoder.Resp(rawValue: res[2] as! UInt32)!
             switch status {
             case .ACK:
                 ok = true

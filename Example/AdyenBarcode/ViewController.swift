@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  AdyenBarcode
+//  AdyenBarcoder
 //
 //  Created by Taras Kalapun on 1/26/17.
 //  Copyright © 2017 Adyen. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 import ExternalAccessory
-import AdyenBarcode
+import AdyenBarcoder
 
 class ViewController: UIViewController, BarcoderDelegate {
 
@@ -20,7 +20,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var i2of5Switch: UISwitch!
     @IBOutlet weak var debugSwitch: UISwitch!
     
-    let barcoder = AdyenBarcode.sharedInstance
+    let barcoder = AdyenBarcoder.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,11 +76,11 @@ class ViewController: UIViewController, BarcoderDelegate {
     }
 
     @IBAction func reconnect(_ sender: Any) {
-        AdyenBarcode.sharedInstance.reconnect()
+        AdyenBarcoder.sharedInstance.reconnect()
     }
     
     @IBAction func disconnect(_ sender: Any) {
-        AdyenBarcode.sharedInstance.disconnect()
+        AdyenBarcoder.sharedInstance.disconnect()
     }
 
     
@@ -93,11 +93,11 @@ class ViewController: UIViewController, BarcoderDelegate {
 //    }
 //    
     @IBAction func closeDevice(_ sender: Any) {
-        AdyenBarcode.sharedInstance.closeDevice()
+        AdyenBarcoder.sharedInstance.closeDevice()
     }
 
     @IBAction func openDevice(_ sender: Any) {
-        AdyenBarcode.sharedInstance.openDevice()
+        AdyenBarcoder.sharedInstance.openDevice()
     }
 
     

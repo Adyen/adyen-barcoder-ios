@@ -1,6 +1,6 @@
 //
 //  AccessoryStreamer.swift
-//  AdyenBarcode
+//  AdyenBarcoder
 //
 //  Created by Taras Kalapun on 2/1/17.
 //  Copyright © 2017 Adyen. All rights reserved.
