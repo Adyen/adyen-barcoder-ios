@@ -1,4 +1,4 @@
-# AdyenBarcode
+# AdyenBarcoder
 Use Verifone Barcode scanner over MFi
 
 *NOTE:* This is a beta version. 
@@ -15,7 +15,7 @@ You need to add `com.verifone.pmr.barcode` in the `Supported external accessory 
 
 ### Manual
 
-Copy files from `AdyenBarcode` folder.
+Copy files from `AdyenBarcoder` folder.
 
 ### CocoaPods
 
@@ -23,7 +23,7 @@ AdyenBarcode will be available through [CocoaPods](http://cocoapods.org). To ins
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "AdyenBarcode"
+pod "AdyenBarcoder"
 ```
 
 ## Documentation
