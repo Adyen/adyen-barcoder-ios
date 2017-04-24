@@ -169,15 +169,21 @@ public class AdyenBarcoder: NSObject {
 //    }
     
     
+//    public func startSoftScan() {
+        //sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 2)
+//    }
     
+//    public func stopSoftScan() {
+        //sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1)
+//    }
     
-    func sendCommand(_ cmd: AdyenBarcoder.Cmd) {
+    public func sendCommand(_ cmd: AdyenBarcoder.Cmd) {
         log("sendCommand \(cmd.rawValue)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
-    func sendCommand<T>(_ cmd: AdyenBarcoder.Cmd, parameter: UInt8, _ value: T) {
+    public func sendCommand<T>(_ cmd: AdyenBarcoder.Cmd, parameter: UInt8, _ value: T) {
         log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
