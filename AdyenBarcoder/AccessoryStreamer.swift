@@ -10,6 +10,10 @@ import Foundation
 import ExternalAccessory
 
 class AccessoryStreamer : Streamer {
+    private let maxRetries = 3
+    private let delayBetweenRetries = 1
+    
+    private var session: EASession?
     var accessory: EAAccessory?
     var accessoryProtocol: String
     var autoconnect: Bool = false
@@ -19,20 +23,14 @@ class AccessoryStreamer : Streamer {
     
     private var accessorySerialNumber: String?
     
-    
-    
     init(accessoryProtocol: String, autoconnect: Bool) {
         self.accessoryProtocol = accessoryProtocol
         self.autoconnect = autoconnect
         
         super.init()
-        
-
     }
     
     func start() {
-        //        if autoconnect {
-        
         log("AccessoryStreamer \(self.accessoryProtocol)", data: nil)
         
         self.onStreamsOpened = {
@@ -42,7 +40,6 @@ class AccessoryStreamer : Streamer {
         }
         
         initAutoconnect()
-        //        }
     }
     
     deinit {
@@ -57,7 +54,6 @@ class AccessoryStreamer : Streamer {
         if (accessory != self.accessory) {
             self.accessory = accessory
         }
-        //self.accessory?.delegate = self
         
         self.accessorySerialNumber = accessory.serialNumber
         
@@ -78,10 +74,32 @@ class AccessoryStreamer : Streamer {
         self.inputStream = nil
         self.outputStream = nil
         self.accessory = nil
+        self.session = nil
     }
     
     func openSession() {
-        
+        openSession(retries: maxRetries)
+    }
+    
+    private func openSession(retries: Int) {
+        checkAcessory()
+
+        if let accessory = self.accessory {
+            session = EASession(accessory: accessory, forProtocol: self.accessoryProtocol)
+            
+            log("Opening Session", data: nil)
+            if let input = session?.inputStream, let output = session?.outputStream {
+                inputStream = input
+                outputStream = output
+                openStreams()
+            } else {
+                log("Could not open session.", data: nil)
+                retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetries)
+            }
+        }
+    }
+    
+    private func checkAcessory() {
         if self.accessory == nil {
             let manager = EAAccessoryManager.shared()
             for accessory in manager.connectedAccessories {
@@ -90,31 +108,28 @@ class AccessoryStreamer : Streamer {
                 }
             }
         }
-        
-        
-        if let accessory = self.accessory {
-            let session = EASession(accessory: accessory, forProtocol: self.accessoryProtocol)
-            self.inputStream = session.inputStream
-            self.outputStream = session.outputStream
-            
-            openStreams()
+    }
+    
+    private func retryOpenSession(retriesLeft: Int, delay: Int) {
+        if retriesLeft > 0 {
+            log("Retrying opening session: \(maxRetries - retriesLeft) of \(maxRetries)", data: nil)
+            closeSession()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(delay)) { [weak self] in
+                self?.openSession(retries: retriesLeft)
+            }
         }
     }
 
     func isAccessorySupported(_ accessory: EAAccessory) -> Bool {
-        //log("isAccessorySupported: \(accessory.protocolStrings)")
         return accessory.protocolStrings.contains(accessoryProtocol)
     }
     
     func initAutoconnect() {
-        
         let manager = EAAccessoryManager.shared()
         manager.registerForLocalNotifications()
         
         NotificationCenter.default.addObserver(self, selector: #selector(accessoryDidConnectNotification), name:  NSNotification.Name.EAAccessoryDidConnect, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(accessoryDidDisconnectNotification), name:  NSNotification.Name.EAAccessoryDidDisconnect, object: nil)
-        
-        
         
         log("initAutoconnect", data: nil)
         
