@@ -199,7 +199,7 @@ public class AdyenBarcoder: NSObject {
     
     func parseIncomingData(_ data: Data) {
         let res = parseResponse(data)
-        log("res: \(res.result), data: \(res.data?.hexEncodedString())")
+        log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if self.currentCommand == .BAR_DEV_OPEN {
             self.opened = res.result
@@ -227,7 +227,7 @@ public class AdyenBarcoder: NSObject {
     
     func packCommand(_ cmd: AdyenBarcoder.Cmd, data: Data?) -> Data {
         
-        log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString())")
+        log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
         
         var dataCmd : Data
         if data == nil {
@@ -268,7 +268,7 @@ public class AdyenBarcoder: NSObject {
         do {
             let res = try unpack(format, data)
             let scanData = String(data: res[3] as! Data, encoding: .ascii)
-            log("parseBarcodeScanData: \(res), barcode: \(scanData)")
+            log("parseBarcodeScanData: \(res), barcode: \(scanData ?? "")")
             
             let barcode = Barcode()
             barcode.codeId = CodeId(rawValue: res[2] as! UInt8) ?? .Undefined
@@ -318,7 +318,7 @@ public class AdyenBarcoder: NSObject {
                     log("reason: \(res[3])")
                 } else {
                     resData = res[3] as? Data
-                    log("data: \(resData?.hexEncodedString())")
+                    log("data: \(resData?.hexEncodedString() ?? "")")
                 }
             }
             
