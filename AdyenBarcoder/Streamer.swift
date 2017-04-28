@@ -186,7 +186,7 @@ class Streamer: NSObject, StreamDelegate {
         }
     }
     
-    func log(_ line: String, data: Data?) {
+    func log(_ line: String, data: Data? = nil) {
         if !self.debug { return }
         let logline = (data == nil) ? line : line + " " + (data?.hexEncodedString())!
         
