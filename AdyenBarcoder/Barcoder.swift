@@ -66,29 +66,29 @@ public class Barcoder: NSObject {
     }
     
     private func run() {
-        let accessoryStreamer = AccessoryStreamer(accessoryProtocol: self.accessoryProtocol, autoconnect: self.autoConnect)
-        accessoryStreamer.debug = self.debug
+        let accessoryStreamer = AccessoryStreamer(accessoryProtocol: accessoryProtocol, autoconnect: autoConnect)
+        accessoryStreamer.debug = debug
         
-        accessoryStreamer.logHandler = { line in
-            self.log(line)
+        accessoryStreamer.logHandler = { [weak self] line in
+            self?.log(line)
         }
         
         log("running")
         
-        accessoryStreamer.onDataReceived = { data in
-            self.parseIncomingData(data)
+        accessoryStreamer.onDataReceived = { [weak self] data in
+            self?.parseIncomingData(data)
         }
         
-        accessoryStreamer.onConnected = { accessory in
-            self.log("onConnected \(accessory.description)")
+        accessoryStreamer.onConnected = { [weak self] accessory in
+            self?.log("onConnected \(accessory.description)")
             
-            if self.autoOpenDevice {
-                self.openDevice()
+            if self?.autoOpenDevice ?? false {
+                self?.openDevice()
             }
         }
         
-        accessoryStreamer.onDisconnected = {
-            self.log("onDisconnected")
+        accessoryStreamer.onDisconnected = { [weak self] in
+            self?.log("onDisconnected")
         }
         
         self.accessoryStreamer = accessoryStreamer
@@ -97,41 +97,30 @@ public class Barcoder: NSObject {
     }
     
     deinit {
-        self.accessoryStreamer?.disconnect()
+        accessoryStreamer?.disconnect()
     }
     
-    // should be call on coming from BG
-    public func reconnect() {
+    private func reconnect() {
         log("reconnect")
-        self.accessoryStreamer?.openSession()
+        accessoryStreamer?.openSession()
     }
-    
-    
-    // Should be called on going to BG
-    public func disconnect() {
+
+    private func disconnect() {
         log("disconnect")
-        self.accessoryStreamer?.closeSession()
+        accessoryStreamer?.closeSession()
     }
     
     func log(_ line: String) {
-        if !self.debug { return }
-        if let handler = self.logHandler {
+        if !debug { return }
+        if let handler = logHandler {
             handler(line)
         }
     }
-    
-    /**
-     * Initializes the barcode device.
-     */
+   
     private func openDevice() {
         sendCommand(.BAR_DEV_OPEN)
     }
     
-    /**
-     * Terminates stream connection to Barcode
-     *
-     * This method will shut down the connection to the Barcode stream. An initDevice() will need to be executed again to engage a new stream connection.
-     */
     private func closeDevice() {
         sendCommand(.BAR_DEV_CLOSE)
     }
@@ -157,14 +146,14 @@ public class Barcoder: NSObject {
     
     public func sendCommand(_ cmd: Barcoder.Cmd) {
         log("sendCommand \(cmd.rawValue)")
-        self.currentCommand = cmd
-        self.accessoryStreamer?.send(packCommand(cmd, data: nil))
+        currentCommand = cmd
+        accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
     public func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
         log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
-        self.currentCommand = cmd
-        self.accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
+        currentCommand = cmd
+        accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
     
     private func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
@@ -179,18 +168,18 @@ public class Barcoder: NSObject {
         let res = parseResponse(data)
         log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
-        if self.currentCommand == .BAR_DEV_OPEN {
-            self.opened = res.result
+        if currentCommand == .BAR_DEV_OPEN {
+            opened = res.result
             
-            if self.opened {
+            if opened {
                 configureDefaults()
             }
             
-            self.startScan(mode: .Hard)
+            startScan(mode: .Hard)
         }
         
-        if self.currentCommand == .START_SCAN {
-            self.started = res.result
+        if currentCommand == .START_SCAN {
+            started = res.result
         }
     }
     
