@@ -9,6 +9,11 @@
 import Foundation
 import ExternalAccessory
 
+private enum ScanMode: Int {
+    case Hard = 1
+    case Soft = 2
+}
+
 public class Barcoder: NSObject {
     
     public static let sharedInstance = Barcoder()
@@ -131,45 +136,23 @@ public class Barcoder: NSObject {
         sendCommand(.BAR_DEV_CLOSE)
     }
     
-    /**
-     * Powers up the scanner engine.
-     *
-     * Executing startScan will allow barcode scanning to commence.
-     */
-    public func startScan() {
-        sendCommand(.START_SCAN)
-    }
-    
-    /**
-     * Powers down the scanner engine.
-     *
-     * Executing abortScan will remove power from the scanning engine deactivating barcode scanning.
-     */
-    public func stopScan() {
-        sendCommand(.STOP_SCAN)
-    }
-    
     private func configureDefaults() {
         sendCommand(.EN_CONTINUOUS_RD, parameter: GenPid.CONTINUOUS_READ.rawValue, false)
-        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1) //level
         sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1) //beep
     }
 
     public func startSoftScan() {
-        // Stop recognizing hardware trigger
-        stopScan()
-        
-        // configure soft trigger
-        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 2)
-        
-        // Start the soft scan
-        startScan()
+        startScan(mode: .Soft)
     }
     
     public func stopSoftScan() {
-        stopScan()
-        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1)
-        startScan()
+        startScan(mode: .Hard)
+    }
+    
+    private func startScan(mode: ScanMode) {
+        sendCommand(.STOP_SCAN)
+        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, mode.rawValue)
+        sendCommand(.START_SCAN)
     }
     
     public func sendCommand(_ cmd: Barcoder.Cmd) {
@@ -203,7 +186,7 @@ public class Barcoder: NSObject {
                 configureDefaults()
             }
             
-            self.startScan()
+            self.startScan(mode: .Hard)
         }
         
         if self.currentCommand == .START_SCAN {
