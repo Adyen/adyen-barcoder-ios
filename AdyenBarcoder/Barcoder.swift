@@ -19,8 +19,6 @@ public class Barcoder: NSObject {
     public static let sharedInstance = Barcoder()
     public var delegate: BarcoderDelegate?
     
-    public var accessoryConnectedHandler: ((EAAccessory)->Void)?
-    public var accessoryDisconnectedHandler: ((Void)->Void)?
     public var logHandler: ((String)->Void)?
     
     public var debug = false
@@ -82,12 +80,9 @@ public class Barcoder: NSObject {
             self.parseIncomingData(data)
         }
         
-        
         accessoryStreamer.onConnected = { accessory in
             self.log("onConnected \(accessory.description)")
-            if let handler = self.accessoryConnectedHandler {
-                handler(accessory)
-            }
+            
             if self.autoOpenDevice {
                 self.openDevice()
             }
@@ -95,9 +90,6 @@ public class Barcoder: NSObject {
         
         accessoryStreamer.onDisconnected = {
             self.log("onDisconnected")
-            if let handler = self.accessoryDisconnectedHandler {
-                handler()
-            }
         }
         
         self.accessoryStreamer = accessoryStreamer

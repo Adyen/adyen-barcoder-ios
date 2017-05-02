@@ -13,7 +13,6 @@ import AdyenBarcoder
 class ViewController: UIViewController, BarcoderDelegate {
 
     @IBOutlet weak var barcodeText: UILabel!
-    @IBOutlet weak var accessoryText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
 
     @IBOutlet weak var debugSwitch: UISwitch!
@@ -22,32 +21,18 @@ class ViewController: UIViewController, BarcoderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        barcoder.accessoryConnectedHandler = { accessory in
-            self.setAccessoryText(accessory: accessory)
-        }
-        
-        barcoder.accessoryDisconnectedHandler = {
-            self.setAccessoryText(accessory: nil)
-        }
+        barcoder.debug = self.debugSwitch.isOn
         
         barcoder.logHandler = { line in
             self.logTextView.text = line + "\n" + self.logTextView.text
         }
         
         barcoder.delegate = self
-        
-        barcoder.debug = self.debugSwitch.isOn
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func setAccessoryText(accessory: EAAccessory?) {
-        let name : String! = (accessory != nil) ? accessory?.name : ""
-        self.accessoryText.text = name
     }
     
     @IBAction func startSoftScan() {
