@@ -31,14 +31,7 @@ class AccessoryStreamer : Streamer {
     }
     
     func start() {
-        Logger.log("AccessoryStreamer \(self.accessoryProtocol)")
-        
-        self.onStreamsOpened = {
-            if let handler = self.onConnected {
-                handler(self.accessory!)
-            }
-        }
-        
+        Logger.log("AccessoryStreamer \(accessoryProtocol)")
         initAutoconnect()
     }
     
@@ -55,26 +48,23 @@ class AccessoryStreamer : Streamer {
             self.accessory = accessory
         }
         
-        self.accessorySerialNumber = accessory.serialNumber
-        
+        accessorySerialNumber = accessory.serialNumber
+        onConnected?(accessory)
         openSession()
     }
     
     func disconnect() {
         closeStreams()
-        self.accessory = nil
-        
-        if let handler = self.onDisconnected {
-            handler()
-        }
+        accessory = nil
+        onDisconnected?()
     }
     
     func closeSession() {
         closeStreams()
-        self.inputStream = nil
-        self.outputStream = nil
-        self.accessory = nil
-        self.session = nil
+        inputStream = nil
+        outputStream = nil
+        accessory = nil
+        session = nil
     }
     
     func openSession() {
@@ -85,7 +75,7 @@ class AccessoryStreamer : Streamer {
         checkAcessory()
 
         if let accessory = self.accessory {
-            session = EASession(accessory: accessory, forProtocol: self.accessoryProtocol)
+            session = EASession(accessory: accessory, forProtocol: accessoryProtocol)
             
             Logger.log("Opening Session")
             if let input = session?.inputStream, let output = session?.outputStream {
@@ -100,10 +90,10 @@ class AccessoryStreamer : Streamer {
     }
     
     private func checkAcessory() {
-        if self.accessory == nil {
+        if accessory == nil {
             let manager = EAAccessoryManager.shared()
             for accessory in manager.connectedAccessories {
-                if accessory.serialNumber == self.accessorySerialNumber && isAccessorySupported(accessory) {
+                if accessory.serialNumber == accessorySerialNumber && isAccessorySupported(accessory) {
                     self.accessory = accessory
                 }
             }
@@ -136,7 +126,7 @@ class AccessoryStreamer : Streamer {
         for accessory in manager.connectedAccessories {
             Logger.log("Checking \(accessory.description)")
             if isAccessorySupported(accessory) {
-                self.connect(accessory)
+                connect(accessory)
                 return
             }
         }
@@ -151,7 +141,7 @@ class AccessoryStreamer : Streamer {
             Logger.log("not supported")
             return
         }
-        self.connect(accessory)
+        connect(accessory)
     }
     
     func accessoryDidDisconnectNotification(_ notification: NSNotification) {
@@ -160,7 +150,7 @@ class AccessoryStreamer : Streamer {
         Logger.log("accessoryDidDisconnectNotification \(accessory.description)")
         
         if self.accessory == accessory {
-            self.disconnect()
+            disconnect()
         }
     }
 }

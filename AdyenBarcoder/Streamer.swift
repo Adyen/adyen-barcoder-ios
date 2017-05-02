@@ -24,8 +24,6 @@ class Streamer: NSObject, StreamDelegate {
     var dataPackets = Queue<Data>()
     
     var onDataReceived: ((Data)->Void)?
-    var onStreamsOpened: ((Void)->Void)?
-    var onStreamsClosed: ((Void)->Void)?
     
     /// trying to handle all messages in a another queue
     //private var queue = dispatch_queue_create("com.adyen.connection.queue", DISPATCH_QUEUE_SERIAL)
@@ -73,11 +71,7 @@ class Streamer: NSObject, StreamDelegate {
         }
         
         self.dataPackets.removeAll()
-        
-        
-        if let handler = onStreamsClosed {
-            handler()
-        }
+        Logger.log("Streams closed")
     }
     
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
@@ -97,9 +91,7 @@ class Streamer: NSObject, StreamDelegate {
             }
             
             if self.isOpened {
-                if let handler = onStreamsOpened {
-                    handler()
-                }
+                Logger.log("Streams opened")
             }
 
             break
