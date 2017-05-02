@@ -116,15 +116,6 @@ public class Barcoder: NSObject {
         if let handler = self.logHandler {
             handler(line)
         }
-        //delegate?.barcodelog(AdyenBarcoder: self, log: line)
-    }
-    
-    public func connectToAccessory(_ accessory: EAAccessory) {
-        self.accessoryStreamer?.connect(accessory)
-    }
-    
-    func disconnectFromAccessory() {
-        self.accessoryStreamer?.disconnect()
     }
     
     /**
@@ -161,14 +152,10 @@ public class Barcoder: NSObject {
         sendCommand(.STOP_SCAN)
     }
     
-    func configureDefaults() {
+    private func configureDefaults() {
         sendCommand(.EN_CONTINUOUS_RD, parameter: GenPid.CONTINUOUS_READ.rawValue, false)
-        
-        //level
-        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1)
-        
-        //beep
-        sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1)
+        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1) //level
+        sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1) //beep
     }
 
     public func startSoftScan() {
@@ -200,15 +187,15 @@ public class Barcoder: NSObject {
         self.accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
     
-    public func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
+    private func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
     }
     
-    func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
+    private func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
     }
     
-    func parseIncomingData(_ data: Data) {
+    private func parseIncomingData(_ data: Data) {
         let res = parseResponse(data)
         log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
@@ -227,7 +214,7 @@ public class Barcoder: NSObject {
         }
     }
     
-    func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
+    private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
         
         log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
         
@@ -244,7 +231,7 @@ public class Barcoder: NSObject {
         return finalData
     }
     
-    func packParam<T>(_ cmd: UInt8, _ value: T) -> Data {
+    private func packParam<T>(_ cmd: UInt8, _ value: T) -> Data {
         switch value {
         case is Bool:
             return pack(">BB?", [3, cmd, value])
@@ -262,7 +249,7 @@ public class Barcoder: NSObject {
         }
     }
     
-    func parseBarcodeScanData(_ data: Data) -> Barcode? {
+    private func parseBarcodeScanData(_ data: Data) -> Barcode? {
         // 0x80000000
         // CodeId AimId SymbolName ScanData
         let format = ">HBB*"
@@ -284,7 +271,7 @@ public class Barcoder: NSObject {
         return nil
     }
     
-    func parseResponse(_ data: Data) -> (result: Bool, data: Data?) {
+    private func parseResponse(_ data: Data) -> (result: Bool, data: Data?) {
         var ok = false
         var resData:Data?
         
