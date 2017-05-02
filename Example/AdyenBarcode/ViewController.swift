@@ -19,7 +19,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var autoOpenSwitch: UISwitch!
     @IBOutlet weak var i2of5Switch: UISwitch!
     @IBOutlet weak var debugSwitch: UISwitch!
-    @IBOutlet weak var softScanSwitch: UISwitch!
+    
     
     let barcoder = AdyenBarcoder.sharedInstance
     
@@ -54,6 +54,7 @@ class ViewController: UIViewController, BarcoderDelegate {
                 //Interleaved 2 of 5
                 barcoder.mSymbology(.EN_EAN13_JAN13, value: 0)
                 barcoder.mSymbology(.EN_INTER2OF5, value: 1)
+                
                 barcoder.mSymbology(.SETLEN_ANY_I2OF5, value: 0)
                 barcoder.mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
                 barcoder.mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
@@ -63,12 +64,7 @@ class ViewController: UIViewController, BarcoderDelegate {
                 barcoder.mSymbology(.EN_INTER2OF5, value: 0)
             }
             
-            if self.softScanSwitch.isOn {
-                barcoder.sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 2)
-            } else {
-                barcoder.startScan()
-            }
-            
+            barcoder.startScan()
         }
         
         barcoder.logHandler = { line in
@@ -111,13 +107,11 @@ class ViewController: UIViewController, BarcoderDelegate {
 
     
     @IBAction func startSoftScan() {
-        //barcoder.startSoftScan()
-        barcoder.startScan()
+        barcoder.startSoftScan()
     }
     
     @IBAction func stopSoftScan() {
-        //barcoder.stopSoftScan()
-        barcoder.stopScan()
+        barcoder.stopSoftScan()
     }
     
     // MARK: - Barcode delegate

@@ -81,11 +81,14 @@ public class AdyenBarcoder: NSObject {
         self.accessoryStreamer?.disconnect()
     }
     
+    // should be call on coming from BG
     public func reconnect() {
         log("reconnect")
         self.accessoryStreamer?.openSession()
     }
     
+    
+    // Should be called on going to BG
     public func disconnect() {
         log("disconnect")
         self.accessoryStreamer?.closeSession()
@@ -169,13 +172,22 @@ public class AdyenBarcoder: NSObject {
 //    }
     
     
-//    public func startSoftScan() {
-        //sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 2)
-//    }
+    public func startSoftScan() {
+        // Stop recognizing hardware trigger
+        stopScan()
+        
+        // configure soft trigger
+        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 2)
+        
+        // Start the soft scan
+        startScan()
+    }
     
-//    public func stopSoftScan() {
-        //sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1)
-//    }
+    public func stopSoftScan() {
+        stopScan()
+        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, 1)
+        startScan()
+    }
     
     public func sendCommand(_ cmd: AdyenBarcoder.Cmd) {
         log("sendCommand \(cmd.rawValue)")
