@@ -11,13 +11,13 @@ import CoreFoundation
 
 @objc
 public class Barcode: NSObject {
-    public var codeId: AdyenBarcoder.CodeId = .Undefined
-    public var aimId: AdyenBarcoder.AimId = .Undefined
-    public var symbolId: AdyenBarcoder.SymId = .Undefined
+    public var codeId: Barcoder.CodeId = .Undefined
+    public var aimId: Barcoder.AimId = .Undefined
+    public var symbolId: Barcoder.SymId = .Undefined
     public var text: String = ""
 }
 
-public extension AdyenBarcoder {
+public extension Barcoder {
 
     internal enum Resp: UInt32 {
         case ACK    = 0x00000000

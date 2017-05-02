@@ -20,8 +20,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var i2of5Switch: UISwitch!
     @IBOutlet weak var debugSwitch: UISwitch!
     
-    
-    let barcoder = AdyenBarcoder.sharedInstance
+    let barcoder = Barcoder.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,14 +80,13 @@ class ViewController: UIViewController, BarcoderDelegate {
     }
 
     @IBAction func reconnect(_ sender: Any) {
-        AdyenBarcoder.sharedInstance.reconnect()
+        Barcoder.sharedInstance.reconnect()
     }
     
     @IBAction func disconnect(_ sender: Any) {
-        AdyenBarcoder.sharedInstance.disconnect()
+        Barcoder.sharedInstance.disconnect()
     }
 
-    
 //    @IBAction func startScan(_ sender: Any) {
 //        AdyenBarcode.sharedInstance.startScan()
 //    }
@@ -96,13 +94,13 @@ class ViewController: UIViewController, BarcoderDelegate {
 //    @IBAction func stopScan(_ sender: Any) {
 //        AdyenBarcode.sharedInstance.stopScan()
 //    }
-//    
+    
     @IBAction func closeDevice(_ sender: Any) {
-        AdyenBarcoder.sharedInstance.closeDevice()
+        Barcoder.sharedInstance.closeDevice()
     }
 
     @IBAction func openDevice(_ sender: Any) {
-        AdyenBarcoder.sharedInstance.openDevice()
+        Barcoder.sharedInstance.openDevice()
     }
 
     
@@ -115,12 +113,10 @@ class ViewController: UIViewController, BarcoderDelegate {
     }
     
     // MARK: - Barcode delegate
-
     
     func barcodeReceived(_ barcode: Barcode) {
         let text = "\(barcode.symbolId.name): \(barcode.text)"
         self.barcodeText.text = text
     }
-    
 }
 

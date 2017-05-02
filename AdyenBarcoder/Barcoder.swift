@@ -1,6 +1,6 @@
 //
-//  AdyenBarcoder.swift
-//  AdyenBarcoder
+//  Barcoder.swift
+//  Barcoder
 //
 //  Created by Taras Kalapun on 1/26/17.
 //  Copyright © 2017 Adyen. All rights reserved.
@@ -14,14 +14,14 @@ public protocol BarcoderDelegate {
     func barcodeReceived(_ barcode: Barcode)
 }
 
-public class AdyenBarcoder: NSObject {
+public class Barcoder: NSObject {
     
-    public static let sharedInstance = AdyenBarcoder()
+    public static let sharedInstance = Barcoder()
     public var delegate: BarcoderDelegate?
     
     public var accessoryConnectedHandler: ((EAAccessory)->Void)?
     public var accessoryDisconnectedHandler: ((Void)->Void)?
-    public var deviceConfigHandler: ((AdyenBarcoder)->Void)?
+    public var deviceConfigHandler: ((Barcoder)->Void)?
     public var logHandler: ((String)->Void)?
     
     public var autoConnect = true
@@ -31,12 +31,10 @@ public class AdyenBarcoder: NSObject {
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     
-    var currentCommand: AdyenBarcoder.Cmd?
+    var currentCommand: Barcoder.Cmd?
     
     var opened = false
     var started = false
-    
-    
     
     private override init() { }
     
@@ -146,8 +144,6 @@ public class AdyenBarcoder: NSObject {
     }
     
     func configureDefaults() {
-        //sendCommand(.RESTORE_DEFAULTS)
-        
         sendCommand(.EN_CONTINUOUS_RD, parameter: GenPid.CONTINUOUS_READ.rawValue, false)
         
         //level
@@ -155,23 +151,8 @@ public class AdyenBarcoder: NSObject {
         
         //beep
         sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1)
-        
     }
-    
-//    func start() {
-//        initDevice()
-//        
-//        let deadlineTime = DispatchTime.now() + .seconds(2)
-//        DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
-//            self.configureDefaults()
-//            
-//            self.startScan()
-//        }
-//        
-//        
-//    }
-    
-    
+
     public func startSoftScan() {
         // Stop recognizing hardware trigger
         stopScan()
@@ -189,23 +170,23 @@ public class AdyenBarcoder: NSObject {
         startScan()
     }
     
-    public func sendCommand(_ cmd: AdyenBarcoder.Cmd) {
+    public func sendCommand(_ cmd: Barcoder.Cmd) {
         log("sendCommand \(cmd.rawValue)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
-    public func sendCommand<T>(_ cmd: AdyenBarcoder.Cmd, parameter: UInt8, _ value: T) {
+    public func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
         log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
         self.currentCommand = cmd
         self.accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
     
-    public func mSymbology(_ parameter: AdyenBarcoder.SymPid, value: UInt8) {
+    public func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
     }
     
-    func mSymbology(_ parameter: AdyenBarcoder.SymPid, data: Data) {
+    func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
     }
     
@@ -226,18 +207,14 @@ public class AdyenBarcoder: NSObject {
                 // Start immidiately
                 self.startScan()
             }
-            
-            //self.delegate?.barcodeConnected(AdyenBarcoder: self, isConnected: res.result)
         }
         
         if self.currentCommand == .START_SCAN {
             self.started = res.result
         }
-        
-        //self.accessoryStreamer.send(nil)
     }
     
-    func packCommand(_ cmd: AdyenBarcoder.Cmd, data: Data?) -> Data {
+    func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
         
         log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
         
@@ -273,7 +250,6 @@ public class AdyenBarcoder: NSObject {
     }
     
     func parseBarcodeScanData(_ data: Data) -> Barcode? {
-        
         // 0x80000000
         // CodeId AimId SymbolName ScanData
         let format = ">HBB*"
@@ -311,7 +287,7 @@ public class AdyenBarcoder: NSObject {
             let res = try unpack(format, data)
             log("res: \(res)")
             
-            let status = AdyenBarcoder.Resp(rawValue: res[2] as! UInt32)!
+            let status = Barcoder.Resp(rawValue: res[2] as! UInt32)!
             switch status {
             case .ACK:
                 ok = true
@@ -324,7 +300,6 @@ public class AdyenBarcoder: NSObject {
                 ok = true
             }
             
-            
             if res.count == 4 {
                 if data.count == 13 {
                     log("reason: \(res[3])")
@@ -333,9 +308,7 @@ public class AdyenBarcoder: NSObject {
                     log("data: \(resData?.hexEncodedString() ?? "")")
                 }
             }
-            
-            
-            
+
         } catch {
             log("Can't parse data: \(data.hexEncodedString())")
             ok = false
