@@ -21,13 +21,13 @@ public class Barcoder: NSObject {
     
     public var accessoryConnectedHandler: ((EAAccessory)->Void)?
     public var accessoryDisconnectedHandler: ((Void)->Void)?
-    public var deviceConfigHandler: ((Barcoder)->Void)?
     public var logHandler: ((String)->Void)?
     
     public var autoConnect = true
     public var autoOpenDevice = true
     public var debug = false
     
+    private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     
@@ -36,7 +36,25 @@ public class Barcoder: NSObject {
     var opened = false
     var started = false
     
-    private override init() { }
+    private override init() {
+        super.init()
+        configureSimbology()
+    }
+    
+    private func configureSimbology() {
+        if interleaved2Of5 {
+            mSymbology(.EN_EAN13_JAN13, value: 0)
+            mSymbology(.EN_INTER2OF5, value: 1)
+            
+            mSymbology(.SETLEN_ANY_I2OF5, value: 0)
+            mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
+            mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
+            mSymbology(.CONV_I2OF5_EAN13, value: 0)
+        } else {
+            mSymbology(.EN_EAN13_JAN13, value: 1)
+            mSymbology(.EN_INTER2OF5, value: 0)
+        }
+    }
     
     public func run() {
         let accessoryStreamer = AccessoryStreamer(accessoryProtocol: self.accessoryProtocol, autoconnect: self.autoConnect)
@@ -201,12 +219,7 @@ public class Barcoder: NSObject {
                 configureDefaults()
             }
             
-            if let handler = deviceConfigHandler {
-                handler(self)
-            } else {
-                // Start immidiately
-                self.startScan()
-            }
+            self.startScan()
         }
         
         if self.currentCommand == .START_SCAN {

@@ -47,25 +47,6 @@ class ViewController: UIViewController, BarcoderDelegate {
             self.setAccessoryText(accessory: nil)
         }
         
-        barcoder.deviceConfigHandler = { barcoder in
-            
-            if self.i2of5Switch.isOn {
-                //Interleaved 2 of 5
-                barcoder.mSymbology(.EN_EAN13_JAN13, value: 0)
-                barcoder.mSymbology(.EN_INTER2OF5, value: 1)
-                
-                barcoder.mSymbology(.SETLEN_ANY_I2OF5, value: 0)
-                barcoder.mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
-                barcoder.mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
-                barcoder.mSymbology(.CONV_I2OF5_EAN13, value: 0)
-            } else {
-                barcoder.mSymbology(.EN_EAN13_JAN13, value: 1)
-                barcoder.mSymbology(.EN_INTER2OF5, value: 0)
-            }
-            
-            barcoder.startScan()
-        }
-        
         barcoder.logHandler = { line in
             self.logTextView.text = line + "\n" + self.logTextView.text
         }
