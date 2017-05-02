@@ -24,18 +24,15 @@
                                 <rect key="frame" x="10" y="22" width="300" height="546"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PbG-nQ-YX4">
-                                        <rect key="frame" x="0.0" y="0.0" width="300" height="34"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="40"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="74C-3q-yeb">
-                                                <rect key="frame" x="0.0" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="Start Barcoder"/>
-                                                <connections>
-                                                    <action selector="startBarcoder" destination="htm-12-TuB" eventType="touchUpInside" id="WLO-Xv-qgn"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZN-ba-AKu">
-                                                <rect key="frame" x="150" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="Soft scan"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="40"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                <state key="normal" title="Soft scan">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="startSoftScan" destination="htm-12-TuB" eventType="touchDown" id="PMp-h0-gRj"/>
                                                     <action selector="stopSoftScan" destination="htm-12-TuB" eventType="touchUpInside" id="ODI-BA-Jq1"/>
@@ -43,12 +40,11 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="34" id="E6K-hk-TVh"/>
-                                            <constraint firstItem="74C-3q-yeb" firstAttribute="width" secondItem="ZZN-ba-AKu" secondAttribute="width" id="Plo-8X-1bK"/>
+                                            <constraint firstAttribute="height" constant="40" id="E6K-hk-TVh"/>
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m9L-QY-7Lg">
-                                        <rect key="frame" x="0.0" y="34" width="300" height="34"/>
+                                        <rect key="frame" x="0.0" y="40" width="300" height="34"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Debug log" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yr0-KI-r6Q">
                                                 <rect key="frame" x="0.0" y="0.0" width="251" height="34"/>
@@ -65,7 +61,7 @@
                                         </constraints>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accessory" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="270-I0-19c">
-                                        <rect key="frame" x="0.0" y="68" width="300" height="30"/>
+                                        <rect key="frame" x="0.0" y="74" width="300" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="Sxs-0z-2UQ"/>
                                         </constraints>
@@ -74,7 +70,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Bs-2Q-vBC">
-                                        <rect key="frame" x="0.0" y="98" width="300" height="30"/>
+                                        <rect key="frame" x="0.0" y="104" width="300" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="4Vh-ck-QQe"/>
                                         </constraints>
@@ -83,7 +79,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Log" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5bY-bf-fW8">
-                                        <rect key="frame" x="0.0" y="128" width="300" height="418"/>
+                                        <rect key="frame" x="0.0" y="134" width="300" height="412"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>

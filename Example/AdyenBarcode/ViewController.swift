@@ -22,20 +22,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func setAccessoryText(accessory: EAAccessory?) {
-        let name : String! = (accessory != nil) ? accessory?.name : ""
-        self.accessoryText.text = name
-    }
-    
-    @IBAction func startBarcoder() {
+        
         barcoder.accessoryConnectedHandler = { accessory in
             self.setAccessoryText(accessory: accessory)
         }
@@ -51,6 +38,16 @@ class ViewController: UIViewController, BarcoderDelegate {
         barcoder.delegate = self
         
         barcoder.debug = self.debugSwitch.isOn
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setAccessoryText(accessory: EAAccessory?) {
+        let name : String! = (accessory != nil) ? accessory?.name : ""
+        self.accessoryText.text = name
     }
     
     @IBAction func startSoftScan() {
