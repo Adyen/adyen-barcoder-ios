@@ -27,11 +27,7 @@ public class Barcoder: NSObject {
     private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
-    
-    var currentCommand: Barcoder.Cmd?
-    
-    var opened = false
-    var started = false
+    private var currentCommand: Barcoder.Cmd?
     
     private override init() {
         super.init()
@@ -169,17 +165,13 @@ public class Barcoder: NSObject {
         log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if currentCommand == .BAR_DEV_OPEN {
-            opened = res.result
+            let opened = res.result
             
             if opened {
                 configureDefaults()
             }
             
             startScan(mode: .Hard)
-        }
-        
-        if currentCommand == .START_SCAN {
-            started = res.result
         }
     }
     
