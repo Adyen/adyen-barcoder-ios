@@ -23,10 +23,10 @@ public class Barcoder: NSObject {
     public var accessoryDisconnectedHandler: ((Void)->Void)?
     public var logHandler: ((String)->Void)?
     
-    public var autoConnect = true
-    public var autoOpenDevice = true
     public var debug = false
     
+    private var autoConnect = true
+    private var autoOpenDevice = true
     private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?

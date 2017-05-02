@@ -15,9 +15,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var accessoryText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
-    
-    @IBOutlet weak var autoOpenSwitch: UISwitch!
-    @IBOutlet weak var i2of5Switch: UISwitch!
+
     @IBOutlet weak var debugSwitch: UISwitch!
     
     let barcoder = Barcoder.sharedInstance
@@ -25,7 +23,6 @@ class ViewController: UIViewController, BarcoderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,8 +51,6 @@ class ViewController: UIViewController, BarcoderDelegate {
         barcoder.delegate = self
         
         barcoder.debug = self.debugSwitch.isOn
-        barcoder.autoConnect = true
-        barcoder.autoOpenDevice = self.autoOpenSwitch.isOn
         
         barcoder.run()
     }
@@ -68,14 +63,6 @@ class ViewController: UIViewController, BarcoderDelegate {
         Barcoder.sharedInstance.disconnect()
     }
 
-//    @IBAction func startScan(_ sender: Any) {
-//        AdyenBarcode.sharedInstance.startScan()
-//    }
-//    
-//    @IBAction func stopScan(_ sender: Any) {
-//        AdyenBarcode.sharedInstance.stopScan()
-//    }
-    
     @IBAction func closeDevice(_ sender: Any) {
         Barcoder.sharedInstance.closeDevice()
     }
