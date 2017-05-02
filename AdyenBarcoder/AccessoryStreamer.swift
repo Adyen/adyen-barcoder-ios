@@ -31,7 +31,7 @@ class AccessoryStreamer : Streamer {
     }
     
     func start() {
-        log("AccessoryStreamer \(self.accessoryProtocol)")
+        Logger.log("AccessoryStreamer \(self.accessoryProtocol)")
         
         self.onStreamsOpened = {
             if let handler = self.onConnected {
@@ -87,13 +87,13 @@ class AccessoryStreamer : Streamer {
         if let accessory = self.accessory {
             session = EASession(accessory: accessory, forProtocol: self.accessoryProtocol)
             
-            log("Opening Session")
+            Logger.log("Opening Session")
             if let input = session?.inputStream, let output = session?.outputStream {
                 inputStream = input
                 outputStream = output
                 openStreams()
             } else {
-                log("Could not open session.")
+                Logger.log("Could not open session.")
                 retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetries)
             }
         }
@@ -112,7 +112,7 @@ class AccessoryStreamer : Streamer {
     
     private func retryOpenSession(retriesLeft: Int, delay: Int) {
         if retriesLeft > 0 {
-            log("Retrying opening session: \(maxRetries - retriesLeft) of \(maxRetries)")
+            Logger.log("Retrying opening session: \(maxRetries - retriesLeft) of \(maxRetries)")
             closeSession()
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(delay)) { [weak self] in
                 self?.openSession(retries: retriesLeft)
@@ -131,10 +131,10 @@ class AccessoryStreamer : Streamer {
         NotificationCenter.default.addObserver(self, selector: #selector(accessoryDidConnectNotification), name:  NSNotification.Name.EAAccessoryDidConnect, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(accessoryDidDisconnectNotification), name:  NSNotification.Name.EAAccessoryDidDisconnect, object: nil)
         
-        log("initAutoconnect")
+        Logger.log("initAutoconnect")
         
         for accessory in manager.connectedAccessories {
-            log("Checking \(accessory.description)")
+            Logger.log("Checking \(accessory.description)")
             if isAccessorySupported(accessory) {
                 self.connect(accessory)
                 return
@@ -145,10 +145,10 @@ class AccessoryStreamer : Streamer {
     func accessoryDidConnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         
-        log("accessoryDidConnectNotification \(accessory.description)")
+        Logger.log("accessoryDidConnectNotification \(accessory.description)")
         
         if !isAccessorySupported(accessory) {
-            log("not supported")
+            Logger.log("not supported")
             return
         }
         self.connect(accessory)
@@ -157,7 +157,7 @@ class AccessoryStreamer : Streamer {
     func accessoryDidDisconnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         
-        log("accessoryDidDisconnectNotification \(accessory.description)")
+        Logger.log("accessoryDidDisconnectNotification \(accessory.description)")
         
         if self.accessory == accessory {
             self.disconnect()

@@ -15,19 +15,28 @@ private enum ScanMode: Int {
 }
 
 public class Barcoder: NSObject {
-    
-    public static let sharedInstance = Barcoder()
-    
-    public var logHandler: ((String)->Void)?
-    public var scanHandler: ((Barcode)->Void)?
-    public var debug = false
-    
     private var autoConnect = true
     private var autoOpenDevice = true
     private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     private var currentCommand: Barcoder.Cmd?
+    
+    public static let sharedInstance = Barcoder()
+    
+    public var scanHandler: ((Barcode)->Void)?
+    
+    public static var logHandler: ((String)->Void)? {
+        didSet {
+            Logger.handler = logHandler
+        }
+    }
+    
+    public static var debug = false {
+        didSet {
+            Logger.debug = debug
+        }
+    }
     
     private override init() {
         super.init()
@@ -63,28 +72,23 @@ public class Barcoder: NSObject {
     
     private func run() {
         let accessoryStreamer = AccessoryStreamer(accessoryProtocol: accessoryProtocol, autoconnect: autoConnect)
-        accessoryStreamer.debug = debug
-        
-        accessoryStreamer.logHandler = { [weak self] line in
-            self?.log(line)
-        }
-        
-        log("running")
+
+        Logger.log("running")
         
         accessoryStreamer.onDataReceived = { [weak self] data in
             self?.parseIncomingData(data)
         }
         
         accessoryStreamer.onConnected = { [weak self] accessory in
-            self?.log("onConnected \(accessory.description)")
+            Logger.log("onConnected \(accessory.description)")
             
             if self?.autoOpenDevice ?? false {
                 self?.openDevice()
             }
         }
         
-        accessoryStreamer.onDisconnected = { [weak self] in
-            self?.log("onDisconnected")
+        accessoryStreamer.onDisconnected = {
+            Logger.log("onDisconnected")
         }
         
         self.accessoryStreamer = accessoryStreamer
@@ -97,22 +101,15 @@ public class Barcoder: NSObject {
     }
     
     private func reconnect() {
-        log("reconnect")
+        Logger.log("reconnect")
         accessoryStreamer?.openSession()
     }
 
     private func disconnect() {
-        log("disconnect")
+        Logger.log("disconnect")
         accessoryStreamer?.closeSession()
     }
     
-    func log(_ line: String) {
-        if !debug { return }
-        if let handler = logHandler {
-            handler(line)
-        }
-    }
-   
     private func openDevice() {
         sendCommand(.BAR_DEV_OPEN)
     }
@@ -141,13 +138,13 @@ public class Barcoder: NSObject {
     }
     
     public func sendCommand(_ cmd: Barcoder.Cmd) {
-        log("sendCommand \(cmd.rawValue)")
+        Logger.log("sendCommand \(cmd.rawValue)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
     public func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
-        log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
+        Logger.log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
@@ -162,7 +159,7 @@ public class Barcoder: NSObject {
     
     private func parseIncomingData(_ data: Data) {
         let res = Parser().parseResponse(data)
-        log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
+        Logger.log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if let barcode = res.barcode {
             self.scanHandler?(barcode)
@@ -181,7 +178,7 @@ public class Barcoder: NSObject {
     
     private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
         
-        log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
+        Logger.log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
         
         var dataCmd : Data
         if data == nil {

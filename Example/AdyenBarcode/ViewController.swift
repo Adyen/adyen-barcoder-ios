@@ -14,20 +14,15 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
-
-    @IBOutlet weak var debugSwitch: UISwitch!
-    
-    let barcoder = Barcoder.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        barcoder.debug = self.debugSwitch.isOn
-        
-        barcoder.logHandler = { line in
+        Barcoder.debug = true
+        Barcoder.logHandler = { line in
             self.logTextView.text = line + "\n" + self.logTextView.text
         }
         
-        barcoder.scanHandler = { [weak self] barcode in
+        Barcoder.sharedInstance.scanHandler = { [weak self] barcode in
             let text = "\(barcode.symbolId.name): \(barcode.text)"
             self?.barcodeText.text = text
         }
@@ -39,11 +34,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func startSoftScan() {
-        barcoder.startSoftScan()
+        Barcoder.sharedInstance.startSoftScan()
     }
     
     @IBAction func stopSoftScan() {
-        barcoder.stopSoftScan()
+        Barcoder.sharedInstance.stopSoftScan()
     }
 }
 

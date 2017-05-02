@@ -16,8 +16,8 @@ class Parser {
         let format = ">HBB*"
         do {
             let res = try unpack(format, data)
-//            let scanData = String(data: res[3] as! Data, encoding: .ascii)
-//            log("parseBarcodeScanData: \(res), barcode: \(scanData ?? "")")
+            let scanData = String(data: res[3] as! Data, encoding: .ascii)
+            Logger.log("parseBarcodeScanData: \(res), barcode: \(scanData ?? "")")
             
             let barcode = Barcode()
             barcode.codeId = Barcoder.CodeId(rawValue: res[2] as! UInt8) ?? .Undefined
@@ -25,8 +25,7 @@ class Parser {
             barcode.symbolId = Barcoder.SymId(rawValue: res[0] as! UInt16) ?? .Undefined
             barcode.text = String(data: res[3] as! Data, encoding: .ascii) ?? ""
             
-//            log("Barcode: \(barcode)")
-//            scanHandler?(barcode)
+            Logger.log("Barcode: \(barcode)")
             return barcode
         } catch {}
         return nil
@@ -47,7 +46,7 @@ class Parser {
             }
             
             let res = try unpack(format, data)
-//            log("res: \(res)")
+            Logger.log("res: \(res)")
             
             let status = Barcoder.Resp(rawValue: res[2] as! UInt32)!
             switch status {
@@ -64,15 +63,15 @@ class Parser {
             
             if res.count == 4 {
                 if data.count == 13 {
-//                    log("reason: \(res[3])")
+                    Logger.log("reason: \(res[3])")
                 } else {
                     resData = res[3] as? Data
-//                    log("data: \(resData?.hexEncodedString() ?? "")")
+                    Logger.log("data: \(resData?.hexEncodedString() ?? "")")
                 }
             }
             
         } catch {
-//            log("Can't parse data: \(data.hexEncodedString())")
+            Logger.log("Can't parse data: \(data.hexEncodedString())")
             ok = false
         }
         return (ok, resData, barcode)
