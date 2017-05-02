@@ -10,7 +10,7 @@ import UIKit
 import ExternalAccessory
 import AdyenBarcoder
 
-class ViewController: UIViewController, BarcoderDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
@@ -27,7 +27,10 @@ class ViewController: UIViewController, BarcoderDelegate {
             self.logTextView.text = line + "\n" + self.logTextView.text
         }
         
-        barcoder.delegate = self
+        barcoder.scanHandler = { [weak self] barcode in
+            let text = "\(barcode.symbolId.name): \(barcode.text)"
+            self?.barcodeText.text = text
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,13 +44,6 @@ class ViewController: UIViewController, BarcoderDelegate {
     
     @IBAction func stopSoftScan() {
         barcoder.stopSoftScan()
-    }
-    
-    // MARK: - Barcode delegate
-    
-    func barcodeReceived(_ barcode: Barcode) {
-        let text = "\(barcode.symbolId.name): \(barcode.text)"
-        self.barcodeText.text = text
     }
 }
 

@@ -9,18 +9,12 @@
 import Foundation
 import ExternalAccessory
 
-@objc
-public protocol BarcoderDelegate {
-    func barcodeReceived(_ barcode: Barcode)
-}
-
 public class Barcoder: NSObject {
     
     public static let sharedInstance = Barcoder()
-    public var delegate: BarcoderDelegate?
     
     public var logHandler: ((String)->Void)?
-    
+    public var scanHandler: ((Barcode)->Void)?
     public var debug = false
     
     private var autoConnect = true
@@ -268,7 +262,7 @@ public class Barcoder: NSObject {
             barcode.text = String(data: res[3] as! Data, encoding: .ascii) ?? ""
             
             log("Barcode: \(barcode)")
-            self.delegate?.barcodeReceived(barcode)
+            scanHandler?(barcode)
             return barcode
         } catch {}
         return nil
