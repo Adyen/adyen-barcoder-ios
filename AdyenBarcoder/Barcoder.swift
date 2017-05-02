@@ -39,6 +39,7 @@ public class Barcoder: NSObject {
     private override init() {
         super.init()
         configureSimbology()
+        run()
     }
     
     private func configureSimbology() {

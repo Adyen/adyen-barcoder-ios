@@ -51,8 +51,6 @@ class ViewController: UIViewController, BarcoderDelegate {
         barcoder.delegate = self
         
         barcoder.debug = self.debugSwitch.isOn
-        
-        barcoder.run()
     }
 
     @IBAction func reconnect(_ sender: Any) {
