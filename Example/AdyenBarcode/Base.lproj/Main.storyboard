@@ -105,35 +105,8 @@
                                             <constraint firstItem="yDS-Rc-mcR" firstAttribute="width" secondItem="RAI-41-4Af" secondAttribute="width" id="u0N-gt-BWN"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RP4-Sm-HPR">
-                                        <rect key="frame" x="0.0" y="162" width="300" height="34"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rL-BR-eAm">
-                                                <rect key="frame" x="0.0" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="OpenDevice">
-                                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="openDevice:" destination="htm-12-TuB" eventType="touchUpInside" id="N3n-mF-6BS"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ep-ME-S03">
-                                                <rect key="frame" x="150" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="CloseDevice">
-                                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="closeDevice:" destination="htm-12-TuB" eventType="touchUpInside" id="5Be-Rg-nsM"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="34" id="80e-pk-iaV"/>
-                                            <constraint firstItem="9ep-ME-S03" firstAttribute="width" secondItem="8rL-BR-eAm" secondAttribute="width" id="eBc-ZZ-YO4"/>
-                                        </constraints>
-                                    </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Log" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5bY-bf-fW8">
-                                        <rect key="frame" x="0.0" y="196" width="300" height="350"/>
+                                        <rect key="frame" x="0.0" y="162" width="300" height="384"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>

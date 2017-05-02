@@ -129,8 +129,7 @@ public class Barcoder: NSObject {
     /**
      * Initializes the barcode device.
      */
-    
-    public func openDevice() {
+    private func openDevice() {
         sendCommand(.BAR_DEV_OPEN)
     }
     
@@ -139,7 +138,7 @@ public class Barcoder: NSObject {
      *
      * This method will shut down the connection to the Barcode stream. An initDevice() will need to be executed again to engage a new stream connection.
      */
-    public func closeDevice() {
+    private func closeDevice() {
         sendCommand(.BAR_DEV_CLOSE)
     }
     

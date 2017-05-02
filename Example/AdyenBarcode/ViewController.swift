@@ -62,15 +62,6 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBAction func disconnect(_ sender: Any) {
         Barcoder.sharedInstance.disconnect()
     }
-
-    @IBAction func closeDevice(_ sender: Any) {
-        Barcoder.sharedInstance.closeDevice()
-    }
-
-    @IBAction func openDevice(_ sender: Any) {
-        Barcoder.sharedInstance.openDevice()
-    }
-
     
     @IBAction func startSoftScan() {
         barcoder.startSoftScan()
