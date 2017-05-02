@@ -52,14 +52,6 @@ class ViewController: UIViewController, BarcoderDelegate {
         
         barcoder.debug = self.debugSwitch.isOn
     }
-
-    @IBAction func reconnect(_ sender: Any) {
-        Barcoder.sharedInstance.reconnect()
-    }
-    
-    @IBAction func disconnect(_ sender: Any) {
-        Barcoder.sharedInstance.disconnect()
-    }
     
     @IBAction func startSoftScan() {
         barcoder.startSoftScan()

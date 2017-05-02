@@ -39,6 +39,7 @@ public class Barcoder: NSObject {
     private override init() {
         super.init()
         configureSimbology()
+        registerForNotifications()
         run()
     }
     
@@ -57,7 +58,17 @@ public class Barcoder: NSObject {
         }
     }
     
-    public func run() {
+    private func registerForNotifications() {
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: .main) { [weak self] (notification) in
+            self?.disconnect()
+        }
+
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: .main) { [weak self] (notification) in
+            self?.reconnect()
+        }
+    }
+    
+    private func run() {
         let accessoryStreamer = AccessoryStreamer(accessoryProtocol: self.accessoryProtocol, autoconnect: self.autoConnect)
         accessoryStreamer.debug = self.debug
         

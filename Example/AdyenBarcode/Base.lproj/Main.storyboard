@@ -82,31 +82,8 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXq-Og-crr">
-                                        <rect key="frame" x="0.0" y="128" width="300" height="34"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAI-41-4Af">
-                                                <rect key="frame" x="0.0" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="Reconnect"/>
-                                                <connections>
-                                                    <action selector="reconnect:" destination="htm-12-TuB" eventType="touchUpInside" id="f7T-eu-RR7"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yDS-Rc-mcR">
-                                                <rect key="frame" x="150" y="0.0" width="150" height="34"/>
-                                                <state key="normal" title="Disconnect"/>
-                                                <connections>
-                                                    <action selector="disconnect:" destination="htm-12-TuB" eventType="touchUpInside" id="4Gc-p3-2sI"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="34" id="oWM-2A-DPv"/>
-                                            <constraint firstItem="yDS-Rc-mcR" firstAttribute="width" secondItem="RAI-41-4Af" secondAttribute="width" id="u0N-gt-BWN"/>
-                                        </constraints>
-                                    </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Log" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5bY-bf-fW8">
-                                        <rect key="frame" x="0.0" y="162" width="300" height="384"/>
+                                        <rect key="frame" x="0.0" y="128" width="300" height="418"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
