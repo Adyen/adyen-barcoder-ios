@@ -10,35 +10,34 @@ import UIKit
 import ExternalAccessory
 import AdyenBarcoder
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, BarcoderDelegate {
 
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
     
+    let barcoder = Barcoder.instance
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        Barcoder.debug = true
-        Barcoder.logHandler = { line in
-            self.logTextView.text = line + "\n" + self.logTextView.text
-        }
-        
-        Barcoder.sharedInstance.scanHandler = { [weak self] barcode in
-            let text = "\(barcode.symbolId.name): \(barcode.text)"
-            self?.barcodeText.text = text
-        }
+        barcoder.debug = true
+        barcoder.delegate = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     @IBAction func startSoftScan() {
-        Barcoder.sharedInstance.startSoftScan()
+        barcoder.startSoftScan()
     }
     
     @IBAction func stopSoftScan() {
-        Barcoder.sharedInstance.stopSoftScan()
+        barcoder.stopSoftScan()
+    }
+    
+    func didScanBarcode(barcode: Barcode) {
+        let text = "\(barcode.symbolId.name): \(barcode.text)"
+        barcodeText.text = text
+    }
+    
+    func didReceiveNewLogMessage(_ message: String) {
+        let line = "\(Date().timeIntervalSince1970) " + message
+        logTextView.text = line + "\n" + self.logTextView.text
     }
 }
-

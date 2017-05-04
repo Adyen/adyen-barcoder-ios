@@ -18,36 +18,46 @@ private enum ScanMode: Int {
     case unknown, connecting, connected
 }
 
+@objc public protocol BarcoderDelegate {
+    func didScanBarcode(barcode: Barcode)
+    @objc optional func didReceiveNewLogMessage(_ message: String)
+    @objc optional func didChangeDeviceStatus(_ status: DeviceStatus)
+}
+
 public class Barcoder: NSObject {
-    private var autoConnect = true
-    private var autoOpenDevice = true
     private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     private var currentCommand: Barcoder.Cmd?
     private var accessoryConnectionId = -1
     
-    public static let sharedInstance = Barcoder()
+    public static let instance = Barcoder()
     
-    public var scanHandler: ((Barcode)->Void)?
-    
-    public static var logHandler: ((String)->Void)? {
+    public var delegate: BarcoderDelegate? {
         didSet {
-            Logger.handler = logHandler
+            if oldValue == nil {
+                setup()
+            }
         }
     }
     
-    public static var debug = false {
+    public var debug = false {
         didSet {
             Logger.debug = debug
         }
     }
     
-    private override init() {
-        super.init()
+    private func setup() {
+        configureLoggerHandler()
         configureSimbology()
         registerForNotifications()
         run()
+    }
+    
+    private func configureLoggerHandler() {
+        Logger.handler = { [weak self] message in
+            self?.delegate?.didReceiveNewLogMessage?(message)
+        }
     }
     
     private func configureSimbology() {
@@ -91,8 +101,9 @@ public class Barcoder: NSObject {
             }
         }
         
-        accessoryStreamer.onDeviceStatusChange = { status in
+        accessoryStreamer.onDeviceStatusChange = { [weak self] status in
             Logger.log("Device status changed: \(status.rawValue)")
+            self?.delegate?.didChangeDeviceStatus?(status)
         }
         
         self.accessoryStreamer = accessoryStreamer
@@ -167,12 +178,12 @@ public class Barcoder: NSObject {
         Logger.log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if let barcode = res.barcode {
-            self.scanHandler?(barcode)
+            delegate?.didScanBarcode(barcode: barcode)
         }
         
         if currentCommand == .BAR_DEV_OPEN {
-            self.configureDefaults()
-            self.startScan(mode: .hard)
+            configureDefaults()
+            startScan(mode: .hard)
         }
     }
     
