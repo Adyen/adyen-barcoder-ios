@@ -10,8 +10,12 @@ import Foundation
 import ExternalAccessory
 
 private enum ScanMode: Int {
-    case Hard = 1
-    case Soft = 2
+    case hard = 1
+    case soft = 2
+}
+
+@objc public enum DeviceStatus: Int {
+    case unknown, connecting, connected
 }
 
 public class Barcoder: NSObject {
@@ -87,6 +91,10 @@ public class Barcoder: NSObject {
             }
         }
         
+        accessoryStreamer.onDeviceStatusChange = { status in
+            Logger.log("Device status changed: \(status.rawValue)")
+        }
+        
         self.accessoryStreamer = accessoryStreamer
         
         accessoryStreamer.start()
@@ -107,6 +115,7 @@ public class Barcoder: NSObject {
     }
     
     private func openDevice() {
+        Logger.log("will open device")
         sendCommand(.BAR_DEV_OPEN)
     }
     
@@ -120,11 +129,11 @@ public class Barcoder: NSObject {
     }
 
     public func startSoftScan() {
-        startScan(mode: .Soft)
+        startScan(mode: .soft)
     }
     
     public func stopSoftScan() {
-        startScan(mode: .Hard)
+        startScan(mode: .hard)
     }
     
     private func startScan(mode: ScanMode) {
@@ -162,13 +171,8 @@ public class Barcoder: NSObject {
         }
         
         if currentCommand == .BAR_DEV_OPEN {
-            let opened = res.result
-            
-            if opened {
-                configureDefaults()
-            }
-            
-            startScan(mode: .Hard)
+            self.configureDefaults()
+            self.startScan(mode: .hard)
         }
     }
     
