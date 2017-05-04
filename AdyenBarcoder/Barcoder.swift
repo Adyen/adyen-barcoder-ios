@@ -72,7 +72,7 @@ public class Barcoder: NSObject {
     }
     
     private func run() {
-        let accessoryStreamer = AccessoryStreamer(accessoryProtocol: accessoryProtocol, autoconnect: autoConnect)
+        let accessoryStreamer = AccessoryStreamer(accessoryProtocol: accessoryProtocol)
 
         Logger.log("running")
         

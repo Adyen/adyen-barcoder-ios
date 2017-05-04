@@ -16,17 +16,14 @@ class AccessoryStreamer : Streamer {
     private var session: EASession?
     var accessory: EAAccessory?
     var accessoryProtocol: String
-    var autoconnect: Bool = false
     
     var onAccessoryConnected: ((EAAccessory)->Void)?
     
     private var accessorySerialNumber: String?
     private var isOpeningSession = false
     
-    init(accessoryProtocol: String, autoconnect: Bool) {
+    init(accessoryProtocol: String) {
         self.accessoryProtocol = accessoryProtocol
-        self.autoconnect = autoconnect
-        
         super.init()
     }
     
