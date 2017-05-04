@@ -93,6 +93,8 @@ class AccessoryStreamer : Streamer {
                 Logger.error("Could not open session.")
                 retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetriesInMillis)
             }
+        } else {
+            isOpeningSession = false
         }
     }
     
@@ -150,12 +152,16 @@ class AccessoryStreamer : Streamer {
             Logger.debug("Accessory not supported")
             return
         }
-        connect(accessory)
+        
+        if accessory.isConnected {
+            connect(accessory)
+        }
     }
     
     func accessoryDidDisconnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
         deviceStatus = .unknown
+        closeSession()
     }
 }
