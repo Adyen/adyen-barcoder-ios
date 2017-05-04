@@ -47,18 +47,18 @@ public class Barcoder: NSObject {
         }
     }
     
-    private func setup() {
-        Logger.info("Initializing Barcoder")
-        configureLoggerHandler()
-        configureSimbology()
-        registerForNotifications()
-        run()
-    }
-    
-    private func configureLoggerHandler() {
+    private override init() {
+        super.init()
         Logger.handler = { [weak self] message in
             self?.delegate?.didReceiveNewLogMessage?(message)
         }
+    }
+    
+    private func setup() {
+        Logger.info("Initializing Barcoder")
+        configureSimbology()
+        registerForNotifications()
+        run()
     }
     
     private func configureSimbology() {
