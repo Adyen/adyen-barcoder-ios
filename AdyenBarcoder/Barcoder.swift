@@ -190,6 +190,9 @@ public class Barcoder: NSObject {
         }
         
         if currentCommand == .BAR_DEV_OPEN {
+            if let streamer = accessoryStreamer, !streamer.isOpened {
+                streamer.openSession()
+            }
             configureDefaults()
             startScan(mode: .hard)
         }

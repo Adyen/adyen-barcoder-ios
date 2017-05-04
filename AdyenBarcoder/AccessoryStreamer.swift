@@ -14,6 +14,7 @@ class AccessoryStreamer : Streamer {
     private let delayBetweenRetriesInMillis = 500
     private var session: EASession?
     private var accessorySerialNumber: String?
+    private var isOpeningSession = false
     
     var accessory: EAAccessory?
     var accessoryProtocol: String
@@ -66,15 +67,16 @@ class AccessoryStreamer : Streamer {
     }
     
     func openSession() {
-        guard deviceStatus != .connecting else { return }
+        guard isOpeningSession == false else { return }
         
-        deviceStatus = .connecting
+        isOpeningSession = true
         
         closeSession()
         openSession(retries: maxRetries)
     }
     
     private func openSession(retries: Int) {
+        deviceStatus = .connecting
         checkAcessory()
 
         if let accessory = self.accessory {
@@ -86,6 +88,7 @@ class AccessoryStreamer : Streamer {
                 outputStream = output
                 openStreams()
                 deviceStatus = .connected
+                isOpeningSession = false
             } else {
                 Logger.error("Could not open session.")
                 retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetriesInMillis)
@@ -113,6 +116,7 @@ class AccessoryStreamer : Streamer {
             }
         } else {
             deviceStatus = .unknown
+            isOpeningSession = false
         }
     }
 
