@@ -10,8 +10,8 @@ import Foundation
 import ExternalAccessory
 
 class AccessoryStreamer : Streamer {
-    private let maxRetries = 3
-    private let delayBetweenRetries = 1
+    private let maxRetries = 6
+    private let delayBetweenRetriesInMillis = 500
     
     private var session: EASession?
     var accessory: EAAccessory?
@@ -22,6 +22,8 @@ class AccessoryStreamer : Streamer {
     var onDisconnected: ((Void)->Void)?
     
     private var accessorySerialNumber: String?
+    private var connectionId = -1
+    private var isOpeningSession = false
     
     init(accessoryProtocol: String, autoconnect: Bool) {
         self.accessoryProtocol = accessoryProtocol
@@ -40,16 +42,19 @@ class AccessoryStreamer : Streamer {
     }
     
     func connect(_ accessory: EAAccessory) {
-        closeStreams()
-        
         if !isAccessorySupported(accessory) { return }
         
         if (accessory != self.accessory) {
             self.accessory = accessory
         }
         
+        if accessory.connectionID != connectionId {
+            connectionId = accessory.connectionID
+            onConnected?(accessory)
+        }
+        
         accessorySerialNumber = accessory.serialNumber
-        onConnected?(accessory)
+        
         openSession()
     }
     
@@ -68,6 +73,11 @@ class AccessoryStreamer : Streamer {
     }
     
     func openSession() {
+        if isOpeningSession { return }
+        
+        isOpeningSession = true
+        
+        closeSession()
         openSession(retries: maxRetries)
     }
     
@@ -82,9 +92,10 @@ class AccessoryStreamer : Streamer {
                 inputStream = input
                 outputStream = output
                 openStreams()
+                isOpeningSession = false
             } else {
                 Logger.log("Could not open session.")
-                retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetries)
+                retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetriesInMillis)
             }
         }
     }
@@ -101,12 +112,14 @@ class AccessoryStreamer : Streamer {
     }
     
     private func retryOpenSession(retriesLeft: Int, delay: Int) {
-        if retriesLeft > 0 {
+        if retriesLeft >= 0 {
             Logger.log("Retrying opening session: \(maxRetries - retriesLeft) of \(maxRetries)")
             closeSession()
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(delay)) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(delay)) { [weak self] in
                 self?.openSession(retries: retriesLeft)
             }
+        } else {
+            isOpeningSession = false
         }
     }
 
@@ -150,7 +163,7 @@ class AccessoryStreamer : Streamer {
         Logger.log("accessoryDidDisconnectNotification \(accessory.description)")
         
         if self.accessory == accessory {
-            disconnect()
+//            disconnect()
         }
     }
 }
