@@ -21,6 +21,7 @@ public class Barcoder: NSObject {
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     private var currentCommand: Barcoder.Cmd?
+    private var accessoryConnectionId = -1
     
     public static let sharedInstance = Barcoder()
     
@@ -79,16 +80,11 @@ public class Barcoder: NSObject {
             self?.parseIncomingData(data)
         }
         
-        accessoryStreamer.onConnected = { [weak self] accessory in
-            Logger.log("onConnected \(accessory.description)")
-            
-            if self?.autoOpenDevice ?? false {
+        accessoryStreamer.onAccessoryConnected = { [weak self] accessory in
+            if accessory.connectionID != self?.accessoryConnectionId {
+                self?.accessoryConnectionId = accessory.connectionID
                 self?.openDevice()
             }
-        }
-        
-        accessoryStreamer.onDisconnected = {
-            Logger.log("onDisconnected")
         }
         
         self.accessoryStreamer = accessoryStreamer

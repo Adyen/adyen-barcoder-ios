@@ -18,11 +18,9 @@ class AccessoryStreamer : Streamer {
     var accessoryProtocol: String
     var autoconnect: Bool = false
     
-    var onConnected: ((EAAccessory)->Void)?
-    var onDisconnected: ((Void)->Void)?
+    var onAccessoryConnected: ((EAAccessory)->Void)?
     
     private var accessorySerialNumber: String?
-    private var connectionId = -1
     private var isOpeningSession = false
     
     init(accessoryProtocol: String, autoconnect: Bool) {
@@ -48,20 +46,14 @@ class AccessoryStreamer : Streamer {
             self.accessory = accessory
         }
         
-        if accessory.connectionID != connectionId {
-            connectionId = accessory.connectionID
-            onConnected?(accessory)
-        }
-        
         accessorySerialNumber = accessory.serialNumber
-        
+        onAccessoryConnected?(accessory)
         openSession()
     }
     
     func disconnect() {
         closeStreams()
         accessory = nil
-        onDisconnected?()
     }
     
     func closeSession() {
@@ -161,9 +153,5 @@ class AccessoryStreamer : Streamer {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         
         Logger.log("accessoryDidDisconnectNotification \(accessory.description)")
-        
-        if self.accessory == accessory {
-//            disconnect()
-        }
     }
 }
