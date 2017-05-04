@@ -70,7 +70,7 @@
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcode: " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K16-46-tYg" userLabel="Barcode">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K16-46-tYg" userLabel="Barcode">
                                         <rect key="frame" x="0.0" y="431" width="300" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="25" id="doi-T1-kLR"/>

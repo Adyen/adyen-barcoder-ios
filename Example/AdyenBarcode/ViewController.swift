@@ -29,8 +29,12 @@ class ViewController: UIViewController, BarcoderDelegate {
     }
     
     func didReceiveNewLogMessage(_ message: String) {
-        let line = "\(Date().timeIntervalSince1970) " + message
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss:SSSS"
+        
+        let line = "\(formatter.string(from: Date())) - \(message) "
         logTextView.text = line + "\n" + self.logTextView.text
+        NSLog(line)
     }
 
     @IBAction func startSoftScan() {
