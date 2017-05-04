@@ -70,15 +70,37 @@
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K16-46-tYg" userLabel="Barcode">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VtJ-3g-vbn">
                                         <rect key="frame" x="0.0" y="431" width="300" height="25"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K16-46-tYg" userLabel="Barcode">
+                                                <rect key="frame" x="115" y="0.0" width="70" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="doi-T1-kLR"/>
+                                                    <constraint firstAttribute="width" constant="70" id="lrp-fA-CTe"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AyJ-n4-5Jc" userLabel="Status View">
+                                                <rect key="frame" x="0.0" y="5" width="15" height="15"/>
+                                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="15" id="58j-RK-7RR"/>
+                                                    <constraint firstAttribute="height" constant="15" id="ffg-O8-Kdm"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="25" id="doi-T1-kLR"/>
+                                            <constraint firstAttribute="height" constant="25" id="1kT-DS-cYB"/>
+                                            <constraint firstItem="K16-46-tYg" firstAttribute="centerY" secondItem="VtJ-3g-vbn" secondAttribute="centerY" id="4O6-4D-5EM"/>
+                                            <constraint firstItem="K16-46-tYg" firstAttribute="centerX" secondItem="VtJ-3g-vbn" secondAttribute="centerX" id="a7P-IN-JcQ"/>
+                                            <constraint firstItem="AyJ-n4-5Jc" firstAttribute="leading" secondItem="VtJ-3g-vbn" secondAttribute="leading" id="aoU-RM-ffd"/>
+                                            <constraint firstItem="AyJ-n4-5Jc" firstAttribute="centerY" secondItem="VtJ-3g-vbn" secondAttribute="centerY" id="hJ5-Ia-ATl"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Bs-2Q-vBC">
                                         <rect key="frame" x="0.0" y="456" width="300" height="30"/>
                                         <constraints>
@@ -129,6 +151,7 @@
                     <connections>
                         <outlet property="barcodeText" destination="8Bs-2Q-vBC" id="O0H-21-tu4"/>
                         <outlet property="logTextView" destination="5bY-bf-fW8" id="1WG-ZG-2IX"/>
+                        <outlet property="statusView" destination="AyJ-n4-5Jc" id="9ld-Da-84S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xGu-bG-NaF" userLabel="First Responder" sceneMemberID="firstResponder"/>

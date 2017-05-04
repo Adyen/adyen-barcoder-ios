@@ -14,6 +14,7 @@ class ViewController: UIViewController, BarcoderDelegate {
 
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
+    @IBOutlet weak var statusView: UIView!
     
     let barcoder = Barcoder.instance
     
@@ -35,6 +36,14 @@ class ViewController: UIViewController, BarcoderDelegate {
         let line = "\(formatter.string(from: Date())) - \(message) "
         logTextView.text = line + "\n" + self.logTextView.text
         NSLog(line)
+    }
+    
+    func didChangeDeviceStatus(_ status: DeviceStatus) {
+        switch status {
+        case .unknown: statusView.backgroundColor = UIColor.lightGray
+        case .connecting: statusView.backgroundColor = UIColor.yellow
+        case .connected: statusView.backgroundColor = UIColor.green
+        }
     }
 
     @IBAction func startSoftScan() {

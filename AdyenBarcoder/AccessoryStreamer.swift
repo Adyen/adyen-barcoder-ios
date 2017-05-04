@@ -152,5 +152,6 @@ class AccessoryStreamer : Streamer {
     func accessoryDidDisconnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
+        deviceStatus = .unknown
     }
 }
