@@ -41,6 +41,10 @@ public class Barcoder: NSObject {
         }
     }
     
+    public var deviceStatus: DeviceStatus {
+        return accessoryStreamer?.deviceStatus ?? .unknown
+    }
+    
     public var logLevel: LogLevel = .info {
         didSet {
             Logger.level = logLevel
