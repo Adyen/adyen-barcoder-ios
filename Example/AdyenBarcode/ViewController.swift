@@ -22,14 +22,6 @@ class ViewController: UIViewController, BarcoderDelegate {
         barcoder.logLevel = .debug
         barcoder.delegate = self
     }
-
-    @IBAction func startSoftScan() {
-        barcoder.startSoftScan()
-    }
-    
-    @IBAction func stopSoftScan() {
-        barcoder.stopSoftScan()
-    }
     
     func didScanBarcode(barcode: Barcode) {
         let text = "\(barcode.symbolId.name): \(barcode.text)"
@@ -39,5 +31,24 @@ class ViewController: UIViewController, BarcoderDelegate {
     func didReceiveNewLogMessage(_ message: String) {
         let line = "\(Date().timeIntervalSince1970) " + message
         logTextView.text = line + "\n" + self.logTextView.text
+    }
+
+    @IBAction func startSoftScan() {
+        barcoder.startSoftScan()
+    }
+    
+    @IBAction func stopSoftScan() {
+        barcoder.stopSoftScan()
+    }
+    
+    @IBAction func didChangeLogLevel(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0: barcoder.logLevel = .none
+        case 1: barcoder.logLevel = .error
+        case 2: barcoder.logLevel = .info
+        case 3: barcoder.logLevel = .debug
+        case 4: barcoder.logLevel = .trace
+        default: break
+        }
     }
 }
