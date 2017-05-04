@@ -41,13 +41,14 @@ public class Barcoder: NSObject {
         }
     }
     
-    public var debug = false {
+    public var logLevel: LogLevel = .info {
         didSet {
-            Logger.debug = debug
+            Logger.level = logLevel
         }
     }
     
     private func setup() {
+        Logger.info("Initializing Barcoder")
         configureLoggerHandler()
         configureSimbology()
         registerForNotifications()
@@ -88,8 +89,6 @@ public class Barcoder: NSObject {
     private func run() {
         let accessoryStreamer = AccessoryStreamer(accessoryProtocol: accessoryProtocol)
 
-        Logger.log("running")
-        
         accessoryStreamer.onDataReceived = { [weak self] data in
             self?.parseIncomingData(data)
         }
@@ -102,7 +101,7 @@ public class Barcoder: NSObject {
         }
         
         accessoryStreamer.onDeviceStatusChange = { [weak self] status in
-            Logger.log("Device status changed: \(status.rawValue)")
+            Logger.info("Device status changed: \(status.rawValue)")
             self?.delegate?.didChangeDeviceStatus?(status)
         }
         
@@ -116,17 +115,17 @@ public class Barcoder: NSObject {
     }
     
     private func reconnect() {
-        Logger.log("reconnect")
+        Logger.info("Application will enter foreground. Reconnecting Barcoder")
         accessoryStreamer?.openSession()
     }
 
     private func disconnect() {
-        Logger.log("disconnect")
+        Logger.info("Application will enter background. Disconnecting Barcoder")
         accessoryStreamer?.closeSession()
     }
     
     private func openDevice() {
-        Logger.log("will open device")
+        Logger.debug("Will send open device command")
         sendCommand(.BAR_DEV_OPEN)
     }
     
@@ -140,11 +139,13 @@ public class Barcoder: NSObject {
     }
 
     public func startSoftScan() {
+        Logger.debug("Starting soft scan")
         startScan(mode: .soft)
     }
     
     public func stopSoftScan() {
         startScan(mode: .hard)
+        Logger.debug("Stopped soft scan")
     }
     
     private func startScan(mode: ScanMode) {
@@ -154,13 +155,13 @@ public class Barcoder: NSObject {
     }
     
     public func sendCommand(_ cmd: Barcoder.Cmd) {
-        Logger.log("sendCommand \(cmd.rawValue)")
+        Logger.trace("Will send command: \(cmd.rawValue)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
     public func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
-        Logger.log("sendCommand \(cmd.rawValue) \(parameter) \(value)")
+        Logger.trace("Will send command: \(cmd.rawValue) \(parameter) \(value)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
@@ -175,9 +176,10 @@ public class Barcoder: NSObject {
     
     private func parseIncomingData(_ data: Data) {
         let res = Parser().parseResponse(data)
-        Logger.log("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
+        Logger.trace("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if let barcode = res.barcode {
+            Logger.info("Did scan barcode: \(barcode)")
             delegate?.didScanBarcode(barcode: barcode)
         }
         
@@ -188,8 +190,7 @@ public class Barcoder: NSObject {
     }
     
     private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
-        
-        Logger.log("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
+        Logger.trace("cmd: \(cmd.rawValue), value: \(data?.hexEncodedString() ?? "")")
         
         var dataCmd : Data
         if data == nil {

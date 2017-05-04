@@ -41,8 +41,7 @@ class Streamer: NSObject, StreamDelegate {
     }
     
     func openStreams() {
-        
-        Logger.log("openStreams")
+        Logger.debug("Opening streams")
         
         if let stream = self.inputStream {
             stream.delegate = self
@@ -71,7 +70,7 @@ class Streamer: NSObject, StreamDelegate {
         }
         
         self.dataPackets.removeAll()
-        Logger.log("Streams closed")
+        Logger.debug("Streams closed")
     }
     
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
@@ -91,7 +90,7 @@ class Streamer: NSObject, StreamDelegate {
             }
             
             if self.isOpened {
-                Logger.log("Streams opened")
+                Logger.debug("Streams opened")
             }
 
             break
@@ -116,7 +115,7 @@ class Streamer: NSObject, StreamDelegate {
                 data.append(buffer, count: bytesRead)
             }
         }
-        Logger.log("<", data: data)
+        Logger.trace("<", data: data)
         if let handler = onDataReceived {
              handler(data)
         }
