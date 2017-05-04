@@ -16,6 +16,16 @@ private enum ScanMode: Int {
 
 @objc public enum DeviceStatus: Int {
     case unknown, connecting, connected
+    
+    var description: String {
+        get {
+            switch self {
+            case .connecting: return "Connecting"
+            case .connected: return "Connected"
+            case .unknown: return "Unknown"
+            }
+        }
+    }
 }
 
 @objc public protocol BarcoderDelegate {
@@ -107,7 +117,7 @@ public class Barcoder: NSObject {
         }
         
         accessoryStreamer.onDeviceStatusChange = { [weak self] status in
-            Logger.info("Device status changed: \(status.rawValue)")
+            Logger.info("Device status changed: \(status.description)")
             self?.delegate?.didChangeDeviceStatus?(status)
         }
         
@@ -185,7 +195,7 @@ public class Barcoder: NSObject {
         Logger.trace("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
         if let barcode = res.barcode {
-            Logger.info("Did scan barcode: \(barcode)")
+            Logger.info("Did scan barcode: \(barcode.text)")
             delegate?.didScanBarcode(barcode: barcode)
         }
         
