@@ -30,13 +30,15 @@ public class Barcoder: NSObject {
     private var accessoryStreamer: AccessoryStreamer?
     private var currentCommand: Barcoder.Cmd?
     private var accessoryConnectionId = -1
+    private var isInitialized = false
     
     public static let instance = Barcoder()
     
     public var delegate: BarcoderDelegate? {
         didSet {
-            if oldValue == nil {
+            if !isInitialized {
                 setup()
+                isInitialized = true
             }
         }
     }
