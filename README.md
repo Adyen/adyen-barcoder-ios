@@ -1,21 +1,11 @@
 # AdyenBarcoder
 Use Verifone Barcode scanner over MFi
 
-*NOTE:* This is a beta version. 
-
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-## Requirements
-
 ## Installation
-
-You need to add `com.verifone.pmr.barcode` in the `Supported external accessory protocols` into `Info.plist` file
-
-### Manual
-
-Copy files from `AdyenBarcoder` folder.
 
 ### CocoaPods
 
@@ -26,6 +16,39 @@ it, simply add the following line to your Podfile:
 pod "AdyenBarcoder"
 ```
 
-## Documentation
+### Manual
 
-Will be available soon
+Copy files from `AdyenBarcoder` folder.
+
+## Usage
+
+You need to add `com.verifone.pmr.barcode` in the `Supported external accessory protocols` into `Info.plist` file
+
+### Initializing
+
+To initialize Barcoder library simply get the shared instance and set your `BarcoderDelegate`.
+```swift
+let barcoder = Barcoder.instance
+barcoder.delegate = self
+```
+
+### BarcoderDelegate
+
+The only mandatory method is `didScanBarcode`. This is where the result of the scan will be delivered. You can also receive state updates on `didChangeDeviceStatus`. 
+
+```swift
+@objc public protocol BarcoderDelegate {
+    func didScanBarcode(barcode: Barcode)
+    @objc optional func didReceiveNewLogMessage(_ message: String)
+    @objc optional func didChangeDeviceStatus(_ status: BarcoderStatus)
+}
+```
+
+### Logging
+
+There are five log levels available: None, Error, Info, Debug, Trace. 
+To set the log level simply set the variable on your `Barcoder` instance: 
+```swift
+barcoder.logLevel = .debug
+```
+You will receive each new log message via `BarcoderDelegate` method `didReceiveNewLogMessage`.
