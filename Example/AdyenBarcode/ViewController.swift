@@ -38,11 +38,11 @@ class ViewController: UIViewController, BarcoderDelegate {
         NSLog(line)
     }
     
-    func didChangeDeviceStatus(_ status: DeviceStatus) {
+    func didChangeDeviceStatus(_ status: BarcoderStatus) {
         switch status {
-        case .unknown: statusView.backgroundColor = UIColor.lightGray
+        case .disconnected: statusView.backgroundColor = UIColor.lightGray
         case .connecting: statusView.backgroundColor = UIColor.yellow
-        case .connected: statusView.backgroundColor = UIColor.green
+        case .ready: statusView.backgroundColor = UIColor.green
         }
     }
 

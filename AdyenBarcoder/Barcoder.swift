@@ -14,15 +14,15 @@ private enum ScanMode: Int {
     case soft = 2
 }
 
-@objc public enum DeviceStatus: Int {
-    case unknown, connecting, connected
+@objc public enum BarcoderStatus: Int {
+    case disconnected, connecting, ready
     
     var description: String {
         get {
             switch self {
             case .connecting: return "Connecting"
-            case .connected: return "Connected"
-            case .unknown: return "Unknown"
+            case .ready: return "Ready for use"
+            case .disconnected: return "Disconnected"
             }
         }
     }
@@ -31,7 +31,7 @@ private enum ScanMode: Int {
 @objc public protocol BarcoderDelegate {
     func didScanBarcode(barcode: Barcode)
     @objc optional func didReceiveNewLogMessage(_ message: String)
-    @objc optional func didChangeDeviceStatus(_ status: DeviceStatus)
+    @objc optional func didChangeDeviceStatus(_ status: BarcoderStatus)
 }
 
 public class Barcoder: NSObject {
@@ -41,6 +41,7 @@ public class Barcoder: NSObject {
     private var currentCommand: Barcoder.Cmd?
     private var accessoryConnectionId = -1
     private var isInitialized = false
+    private var isDeviceOpen = false
     
     public static let instance = Barcoder()
     
@@ -53,8 +54,13 @@ public class Barcoder: NSObject {
         }
     }
     
-    public var deviceStatus: DeviceStatus {
-        return accessoryStreamer?.deviceStatus ?? .unknown
+    public internal(set) var status: BarcoderStatus = .disconnected {
+        didSet {
+            if status != oldValue {
+                Logger.info("Device status changed: \(status.description)")
+                delegate?.didChangeDeviceStatus?(status)
+            }
+        }
     }
     
     public var logLevel: LogLevel = .info {
@@ -110,18 +116,26 @@ public class Barcoder: NSObject {
         
         accessoryStreamer.onAccessoryConnected = { [weak self] accessory in
             if accessory.connectionID != self?.accessoryConnectionId {
+                self?.isDeviceOpen = false
                 self?.accessoryConnectionId = accessory.connectionID
                 self?.openDevice()
             }
         }
         
         accessoryStreamer.onDeviceStatusChange = { [weak self] status in
-            Logger.info("Device status changed: \(status.description)")
-            self?.delegate?.didChangeDeviceStatus?(status)
+            switch status {
+            case .opening:
+                self?.status = .connecting
+            case .open:
+                if let isDeviceOpen = self?.isDeviceOpen {
+                    self?.status = isDeviceOpen ? .ready : .connecting
+                }
+            default:
+                self?.status = .disconnected
+            }
         }
         
         self.accessoryStreamer = accessoryStreamer
-        
         accessoryStreamer.start()
     }
     
@@ -199,14 +213,20 @@ public class Barcoder: NSObject {
         }
         
         if currentCommand == .BAR_DEV_OPEN {
-            Logger.debug("Device Opened")
-            if let streamer = accessoryStreamer, !streamer.isOpened {
-                streamer.openSession()
-            }
-            configureSimbology()
-            configureDefaults()
-            startScan(mode: .hard)
+            didOpenDevice()
         }
+    }
+    
+    private func didOpenDevice() {
+        Logger.debug("Device Opened")
+        isDeviceOpen = true
+        status = .ready
+        if let streamer = accessoryStreamer, !streamer.isOpened {
+            streamer.openSession()
+        }
+        configureSimbology()
+        configureDefaults()
+        startScan(mode: .hard)
     }
     
     private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {
