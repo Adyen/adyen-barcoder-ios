@@ -183,13 +183,13 @@ public class Barcoder: NSObject {
         sendCommand(.START_SCAN)
     }
     
-    public func sendCommand(_ cmd: Barcoder.Cmd) {
+    private func sendCommand(_ cmd: Barcoder.Cmd) {
         Logger.trace("Will send command: \(cmd.rawValue)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
-    public func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
+    private func sendCommand<T>(_ cmd: Barcoder.Cmd, parameter: UInt8, _ value: T) {
         Logger.trace("Will send command: \(cmd.rawValue) \(parameter) \(value)")
         currentCommand = cmd
         accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
