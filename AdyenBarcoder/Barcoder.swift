@@ -31,7 +31,7 @@ private enum ScanMode: Int {
 @objc public protocol BarcoderDelegate {
     func didScanBarcode(barcode: Barcode)
     @objc optional func didReceiveNewLogMessage(_ message: String)
-    @objc optional func didChangeDeviceStatus(_ status: BarcoderStatus)
+    @objc optional func didChangeBarcoderStatus(_ status: BarcoderStatus)
 }
 
 public class Barcoder: NSObject {
@@ -58,7 +58,7 @@ public class Barcoder: NSObject {
         didSet {
             if status != oldValue {
                 Logger.info("Device status changed: \(status.description)")
-                delegate?.didChangeDeviceStatus?(status)
+                delegate?.didChangeBarcoderStatus?(status)
             }
         }
     }

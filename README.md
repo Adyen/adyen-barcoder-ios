@@ -40,7 +40,7 @@ The only mandatory method is `didScanBarcode`. This is where the result of the s
 @objc public protocol BarcoderDelegate {
     func didScanBarcode(barcode: Barcode)
     @objc optional func didReceiveNewLogMessage(_ message: String)
-    @objc optional func didChangeDeviceStatus(_ status: BarcoderStatus)
+    @objc optional func didChangeBarcoderStatus(_ status: BarcoderStatus)
 }
 ```
 
