@@ -28,19 +28,19 @@ You need to add `com.verifone.pmr.barcode` in the `Supported external accessory 
 
 To initialize Barcoder library simply get the shared instance and set your `BarcoderDelegate`.
 ```swift
-let barcoder = Barcoder.instance
+let barcoder = Barcoder.sharedInstance
 barcoder.delegate = self
 ```
 
 ### BarcoderDelegate
 
-The only mandatory method is `didScanBarcode`. This is where the result of the scan will be delivered. You can also receive state updates on `didChangeDeviceStatus`. 
+The only mandatory method is `didScan(barcode:)`. This is where the result of the scan will be delivered. You can also receive state updates on `didChange(status:)`. 
 
 ```swift
 @objc public protocol BarcoderDelegate {
-    func didScanBarcode(barcode: Barcode)
-    @objc optional func didReceiveNewLogMessage(_ message: String)
-    @objc optional func didChangeBarcoderStatus(_ status: BarcoderStatus)
+    func didScan(barcode: Barcode)
+    @objc optional func didChange(status: BarcoderStatus)
+    @objc optional func didReceiveLog(message: String)
 }
 ```
 
@@ -62,4 +62,4 @@ To set the log level simply set the variable on your `Barcoder` instance:
 ```swift
 barcoder.logLevel = .debug
 ```
-You will receive each new log message via `BarcoderDelegate` method `didReceiveNewLogMessage`.
+You will receive each new log message via `BarcoderDelegate` method `didReceiveLog(message:)`.

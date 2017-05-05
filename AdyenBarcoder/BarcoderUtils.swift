@@ -11,7 +11,7 @@ import CoreFoundation
 
 // MARK: protocol UnpackedType
 
-public protocol Unpackable {}
+protocol Unpackable {}
 
 extension NSString: Unpackable {}
 extension Bool: Unpackable {}
@@ -189,12 +189,12 @@ func formatDoesMatchDataLength(_ format:String, data:Data) -> Bool {
  - Pascal strings 'p' and native pointers 'P' are not supported
  */
 
-public enum BinUtilsError: Error {
+enum BinUtilsError: Error {
     case formatDoesMatchDataLength(format:String, dataSize:Int)
     case unsupportedFormat(character:Character)
 }
 
-public func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encoding=String.Encoding.windowsCP1252) -> Data {
+func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encoding=String.Encoding.windowsCP1252) -> Data {
     
     var objectsQueue = objects
     
@@ -317,7 +317,7 @@ public func pack(_ format:String, _ objects:[Any], _ stringEncoding:String.Encod
     return mutableData
 }
 
-public func unpack(_ format:String, _ data:Data, _ stringEncoding:String.Encoding=String.Encoding.windowsCP1252) throws -> [Unpackable] {
+func unpack(_ format:String, _ data:Data, _ stringEncoding:String.Encoding=String.Encoding.windowsCP1252) throws -> [Unpackable] {
     
     assert(CFByteOrderGetCurrent() == 1 /* CFByteOrderLittleEndian */, "\(#file) assumes little endian, but host is big endian")
     

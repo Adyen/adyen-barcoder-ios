@@ -24,12 +24,12 @@ class ViewController: UIViewController, BarcoderDelegate {
         barcoder.delegate = self
     }
     
-    func didScanBarcode(barcode: Barcode) {
+    func didScan(barcode: Barcode) {
         let text = "\(barcode.symbolId.name): \(barcode.text)"
         barcodeText.text = text
     }
     
-    func didReceiveNewLogMessage(_ message: String) {
+    func didReceiveLog(message: String) {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss:SSSS"
         
@@ -38,7 +38,7 @@ class ViewController: UIViewController, BarcoderDelegate {
         NSLog(line)
     }
     
-    func didChangeBarcoderStatus(_ status: BarcoderStatus) {
+    func didChange(status: BarcoderStatus) {
         switch status {
         case .disconnected: statusView.backgroundColor = UIColor.lightGray
         case .connecting: statusView.backgroundColor = UIColor.yellow

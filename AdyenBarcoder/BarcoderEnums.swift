@@ -17,7 +17,7 @@ public class Barcode: NSObject {
     public var text: String = ""
 }
 
-public extension Barcoder {
+extension Barcoder {
 
     internal enum Resp: UInt32 {
         case ACK    = 0x00000000
@@ -203,7 +203,7 @@ public enum SymId: UInt16 {
 
 // Commands
 @objc
-public enum Cmd: UInt8 {
+enum Cmd: UInt8 {
     case BAR_DEV_OPEN     = 0x1A
     case BAR_DEV_CLOSE    = 0x1B
     case START_SCAN       = 0x01
@@ -216,13 +216,13 @@ public enum Cmd: UInt8 {
     case DISABLE_ALL_SYMB = 0x19
     case AUTO_BEEP_CONFIG = 0x1C
     
-    public var name: String {
+    var name: String {
         get { return String(describing: self) }
     }
 }
     
 @objc
-public enum GenPid: UInt8 {
+enum GenPid: UInt8 {
     //general parameter IDs
     // asterick (*) in the comments indicate default value
     case PASS_THRU = 0xFF //reserved value
@@ -250,7 +250,7 @@ public enum GenPid: UInt8 {
 }
 
 @objc
-public enum SymPid: UInt8 {
+enum SymPid: UInt8 {
     //code 128
     case EN_CODE128 = 0x00 //value 1 for *enable, 0 disable
     case SETLEN_1DISCRETE_C128 = 0x01 //one byte input value
@@ -408,7 +408,7 @@ public enum SymPid: UInt8 {
 }
 
 @objc
-public enum SymPidUpc: UInt8 {
+enum SymPidUpc: UInt8 {
     case IGNORE_UPC_EAN_W_SUPPLIMENTS = 0x00
     case DECODE_UPC_EAN_W_SUPPLIMENTS = 0x01
     case AUTODESCRIMINATE_SUPPLIMENTS = 0x02

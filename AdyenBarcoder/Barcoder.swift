@@ -29,9 +29,9 @@ private enum ScanMode: Int {
 }
 
 @objc public protocol BarcoderDelegate {
-    func didScanBarcode(barcode: Barcode)
-    @objc optional func didReceiveNewLogMessage(_ message: String)
-    @objc optional func didChangeBarcoderStatus(_ status: BarcoderStatus)
+    func didScan(barcode: Barcode)
+    @objc optional func didChange(status: BarcoderStatus)
+    @objc optional func didReceiveLog(message: String)
 }
 
 public class Barcoder: NSObject {
@@ -58,7 +58,7 @@ public class Barcoder: NSObject {
         didSet {
             if status != oldValue {
                 Logger.info("Device status changed: \(status.description)")
-                delegate?.didChangeBarcoderStatus?(status)
+                delegate?.didChange?(status: status)
             }
         }
     }
@@ -72,7 +72,7 @@ public class Barcoder: NSObject {
     private override init() {
         super.init()
         Logger.handler = { [weak self] message in
-            self?.delegate?.didReceiveNewLogMessage?(message)
+            self?.delegate?.didReceiveLog?(message: message)
         }
     }
     
@@ -209,7 +209,7 @@ public class Barcoder: NSObject {
         
         if let barcode = res.barcode {
             Logger.info("Did scan barcode: \(barcode.text)")
-            delegate?.didScanBarcode(barcode: barcode)
+            delegate?.didScan(barcode: barcode)
         }
         
         if currentCommand == .BAR_DEV_OPEN {

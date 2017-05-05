@@ -13,7 +13,7 @@ class Streamer: NSObject, StreamDelegate {
     var inputOpened = false
     var outputOpened = false
 
-    public var isOpened: Bool {
+    var isOpened: Bool {
         get {
             return self.inputOpened && self.outputOpened
         }
@@ -73,7 +73,7 @@ class Streamer: NSObject, StreamDelegate {
         Logger.debug("Streams closed")
     }
     
-    public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case Stream.Event.errorOccurred:
             break
