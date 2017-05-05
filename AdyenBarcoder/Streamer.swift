@@ -10,11 +10,9 @@ import Foundation
 
 
 class Streamer: NSObject, StreamDelegate {
-    
     var inputOpened = false
     var outputOpened = false
-    
-    
+
     public var isOpened: Bool {
         get {
             return self.inputOpened && self.outputOpened
@@ -26,12 +24,6 @@ class Streamer: NSObject, StreamDelegate {
     var dataPackets = Queue<Data>()
     
     var onDataReceived: ((Data)->Void)?
-    var onStreamsOpened: ((Void)->Void)?
-    var onStreamsClosed: ((Void)->Void)?
-    
-    public var logHandler: ((String)->Void)?
-    
-    var debug = true
     
     /// trying to handle all messages in a another queue
     //private var queue = dispatch_queue_create("com.adyen.connection.queue", DISPATCH_QUEUE_SERIAL)
@@ -49,8 +41,7 @@ class Streamer: NSObject, StreamDelegate {
     }
     
     func openStreams() {
-        
-        log("openStreams", data: nil)
+        Logger.debug("Opening streams")
         
         if let stream = self.inputStream {
             stream.delegate = self
@@ -79,11 +70,7 @@ class Streamer: NSObject, StreamDelegate {
         }
         
         self.dataPackets.removeAll()
-        
-        
-        if let handler = onStreamsClosed {
-            handler()
-        }
+        Logger.debug("Streams closed")
     }
     
     public func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
@@ -103,9 +90,7 @@ class Streamer: NSObject, StreamDelegate {
             }
             
             if self.isOpened {
-                if let handler = onStreamsOpened {
-                    handler()
-                }
+                Logger.debug("Streams opened")
             }
 
             break
@@ -130,7 +115,7 @@ class Streamer: NSObject, StreamDelegate {
                 data.append(buffer, count: bytesRead)
             }
         }
-        log("<", data: data)
+        Logger.trace("<", data: data)
         if let handler = onDataReceived {
              handler(data)
         }
@@ -184,17 +169,6 @@ class Streamer: NSObject, StreamDelegate {
         if self.canWrite {
             write()
         }
-    }
-    
-    func log(_ line: String, data: Data? = nil) {
-        if !self.debug { return }
-        let logline = (data == nil) ? line : line + " " + (data?.hexEncodedString())!
-        
-        if let handler = self.logHandler {
-            handler(logline)
-        }
-        
-        print(logline)
     }
 }
 
