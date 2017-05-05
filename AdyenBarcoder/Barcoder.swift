@@ -72,7 +72,6 @@ public class Barcoder: NSObject {
     
     private func setup() {
         Logger.info("Initializing Barcoder")
-        configureSimbology()
         registerForNotifications()
         run()
     }
@@ -200,9 +199,11 @@ public class Barcoder: NSObject {
         }
         
         if currentCommand == .BAR_DEV_OPEN {
+            Logger.debug("Device Opened")
             if let streamer = accessoryStreamer, !streamer.isOpened {
                 streamer.openSession()
             }
+            configureSimbology()
             configureDefaults()
             startScan(mode: .hard)
         }

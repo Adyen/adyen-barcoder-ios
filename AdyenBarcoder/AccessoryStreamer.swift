@@ -49,8 +49,8 @@ class AccessoryStreamer : Streamer {
         }
         
         accessorySerialNumber = accessory.serialNumber
-        onAccessoryConnected?(accessory)
         openSession()
+        onAccessoryConnected?(accessory)
     }
     
     func disconnect() {
