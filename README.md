@@ -44,6 +44,17 @@ The only mandatory method is `didScanBarcode`. This is where the result of the s
 }
 ```
 
+### SoftScan
+For starting a soft scan: 
+```swift
+barcoder.startSoftScan()
+```
+
+To stop the soft scan: 
+```swift
+barcoder.stopSoftScan()
+```
+
 ### Logging
 
 There are five log levels available: None, Error, Info, Debug, Trace. 
