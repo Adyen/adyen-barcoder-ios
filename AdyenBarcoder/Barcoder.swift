@@ -43,7 +43,7 @@ public class Barcoder: NSObject {
     private var isInitialized = false
     private var isDeviceOpen = false
     
-    public static let instance = Barcoder()
+    public static let sharedInstance = Barcoder()
     
     public var delegate: BarcoderDelegate? {
         didSet {

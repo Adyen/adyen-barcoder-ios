@@ -16,7 +16,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var logTextView: UITextView!
     @IBOutlet weak var statusView: UIView!
     
-    let barcoder = Barcoder.instance
+    let barcoder = Barcoder.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
