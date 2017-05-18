@@ -158,7 +158,6 @@ class Streamer: NSObject, StreamDelegate {
             return // Some error occurred ...
         }
         
-        //NSThread.sleepForTimeInterval(connSleepTime)
     }
     
     func send(_ data: Data?) {
@@ -197,9 +196,6 @@ class Queue<T> {
     }
 }
 
-// see SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG
-//#if DEBUG
-
 extension UnicodeScalar {
     var hexNibble:UInt8 {
         let value = self.value
@@ -235,5 +231,3 @@ extension Data {
     }
     
 }
-
-//#endif

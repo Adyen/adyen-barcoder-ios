@@ -35,7 +35,6 @@ private enum ScanMode: Int {
 }
 
 public class Barcoder: NSObject {
-    private let interleaved2Of5 = false
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
     private var currentCommand: Barcoder.Cmd?
@@ -69,6 +68,14 @@ public class Barcoder: NSObject {
         }
     }
     
+    public var interleaved2Of5 = false {
+        didSet {
+            if status == .ready {
+                configureSimbology()
+            }
+        }
+    }
+    
     private override init() {
         super.init()
         Logger.handler = { [weak self] message in
@@ -80,21 +87,6 @@ public class Barcoder: NSObject {
         Logger.info("Initializing Barcoder")
         registerForNotifications()
         run()
-    }
-    
-    private func configureSimbology() {
-        if interleaved2Of5 {
-            mSymbology(.EN_EAN13_JAN13, value: 0)
-            mSymbology(.EN_INTER2OF5, value: 1)
-            
-            mSymbology(.SETLEN_ANY_I2OF5, value: 0)
-            mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
-            mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
-            mSymbology(.CONV_I2OF5_EAN13, value: 0)
-        } else {
-            mSymbology(.EN_EAN13_JAN13, value: 1)
-            mSymbology(.EN_INTER2OF5, value: 0)
-        }
     }
     
     private func registerForNotifications() {
@@ -195,14 +187,6 @@ public class Barcoder: NSObject {
         accessoryStreamer?.send(packCommand(cmd, data: packParam(parameter, value)))
     }
     
-    private func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
-        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
-    }
-    
-    private func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
-        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
-    }
-    
     private func parseIncomingData(_ data: Data) {
         let res = Parser().parseResponse(data)
         Logger.trace("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
@@ -227,6 +211,29 @@ public class Barcoder: NSObject {
         configureSimbology()
         configureDefaults()
         startScan(mode: .hard)
+    }
+    
+    private func configureSimbology() {
+        if interleaved2Of5 {
+            mSymbology(.EN_EAN13_JAN13, value: 0)
+            mSymbology(.EN_INTER2OF5, value: 1)
+            
+            mSymbology(.SETLEN_ANY_I2OF5, value: 0)
+            mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
+            mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
+            mSymbology(.CONV_I2OF5_EAN13, value: 0)
+        } else {
+            mSymbology(.EN_EAN13_JAN13, value: 1)
+            mSymbology(.EN_INTER2OF5, value: 0)
+        }
+    }
+    
+    private func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
+        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
+    }
+    
+    private func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
+        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
     }
     
     private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {

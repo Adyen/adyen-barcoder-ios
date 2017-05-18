@@ -21,6 +21,7 @@ class ViewController: UIViewController, BarcoderDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         barcoder.logLevel = .debug
+        barcoder.interleaved2Of5 = false
         barcoder.delegate = self
     }
     
