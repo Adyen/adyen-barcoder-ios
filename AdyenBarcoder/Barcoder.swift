@@ -158,6 +158,14 @@ public class Barcoder: NSObject {
         sendCommand(.EN_CONTINUOUS_RD, parameter: GenPid.CONTINUOUS_READ.rawValue, false)
         sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1) //beep
     }
+    
+    public func setSymbology(_ parameter: Barcoder.SymPid, enabled: Bool) {
+        setSymbology(parameter, value: enabled ? 1 : 0)
+    }
+    
+    public func setSymbology(_ parameter: Barcoder.SymPid, data: Data) {
+        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
+    }
 
     public func startSoftScan() {
         Logger.debug("Starting soft scan")
@@ -215,25 +223,21 @@ public class Barcoder: NSObject {
     
     private func configureSimbology() {
         if interleaved2Of5 {
-            mSymbology(.EN_EAN13_JAN13, value: 0)
-            mSymbology(.EN_INTER2OF5, value: 1)
+            setSymbology(.EN_EAN13_JAN13, value: 0)
+            setSymbology(.EN_INTER2OF5, value: 1)
             
-            mSymbology(.SETLEN_ANY_I2OF5, value: 0)
-            mSymbology(.I2OF5_CHECK_DIGIT, value: 0)
-            mSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
-            mSymbology(.CONV_I2OF5_EAN13, value: 0)
+            setSymbology(.SETLEN_ANY_I2OF5, value: 0)
+            setSymbology(.I2OF5_CHECK_DIGIT, value: 0)
+            setSymbology(.XMIT_M2OF5_CHK_DIGIT, value: 1)
+            setSymbology(.CONV_I2OF5_EAN13, value: 0)
         } else {
-            mSymbology(.EN_EAN13_JAN13, value: 1)
-            mSymbology(.EN_INTER2OF5, value: 0)
+            setSymbology(.EN_EAN13_JAN13, value: 1)
+            setSymbology(.EN_INTER2OF5, value: 0)
         }
     }
     
-    private func mSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
+    private func setSymbology(_ parameter: Barcoder.SymPid, value: UInt8) {
         sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, value)
-    }
-    
-    private func mSymbology(_ parameter: Barcoder.SymPid, data: Data) {
-        sendCommand(.SYMBOLOGY, parameter: parameter.rawValue, data)
     }
     
     private func packCommand(_ cmd: Barcoder.Cmd, data: Data?) -> Data {

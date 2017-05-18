@@ -250,7 +250,7 @@ enum GenPid: UInt8 {
 }
 
 @objc
-enum SymPid: UInt8 {
+public enum SymPid: UInt8 {
     //code 128
     case EN_CODE128 = 0x00 //value 1 for *enable, 0 disable
     case SETLEN_1DISCRETE_C128 = 0x01 //one byte input value
