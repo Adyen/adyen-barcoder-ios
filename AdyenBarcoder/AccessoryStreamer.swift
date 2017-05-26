@@ -91,9 +91,9 @@ class AccessoryStreamer : Streamer {
                 inputStream = input
                 outputStream = output
                 openStreams()
-                deviceStatus = .open
                 isOpeningSession = false
                 onAccessoryConnected?(accessory)
+                deviceStatus = .open
             } else {
                 Logger.error("Could not open session.")
                 retryOpenSession(retriesLeft: retries - 1, delay: delayBetweenRetriesInMillis)
