@@ -33,6 +33,10 @@ class Streamer: NSObject, StreamDelegate {
     private var canWrite = true
     private var wasRead = true
     
+    //  Response timeout
+    private let responseTimeout: TimeInterval = 4
+    private var responseTimer: Timer?
+    
     /// sleeping time after each command was send to ev3
     let connSleepTime = 0.125
     
@@ -131,15 +135,18 @@ class Streamer: NSObject, StreamDelegate {
     
     private func write() {
         if !self.wasRead {
+            Logger.trace("Write bytes failed in: !self.wasRead")
             return
         }
         
         if self.dataPackets.isEmpty {
+            Logger.trace("Write bytes failed in: self.dataPackets.isEmpty")
             return
         }
         
         guard let stream = self.outputStream else { return }
         if (!stream.hasSpaceAvailable) {
+            Logger.trace("Write bytes failed in: guard let stream = self.outputStream")
             return
         }
         
@@ -147,26 +154,51 @@ class Streamer: NSObject, StreamDelegate {
         wasRead = false
         
         
-        guard let data = self.dataPackets.dequeue() else { return }
+        guard let data = self.dataPackets.dequeue() else {
+            Logger.trace("Write bytes failed in: guard let data = self.dataPackets.dequeue()")
+            return
+        }
         
         let bytesWritten = data.withUnsafeBytes { stream.write($0, maxLength: data.count) }
         
         if bytesWritten == -1 {
+            Logger.trace("Error while writing data to output stream.")
             //print("error while writing data to bt output stream")
             canWrite = true
             wasRead = true
             return // Some error occurred ...
+        } else {
+            Logger.trace("Did write bytes to output stream.")
+
+            //  Start command timeout timer
+            responseTimer?.invalidate()
+            responseTimer = Timer.scheduledTimer(
+                timeInterval: responseTimeout,
+                target: self,
+                selector: #selector(self.wasReadDidTimeout),
+                userInfo: nil,
+                repeats: false
+            )
         }
-        
+    }
+    
+    func wasReadDidTimeout(_ timer: Timer) {
+        Logger.trace("Bytes stream did timeout to receive response bytes.")
+        wasRead = true
     }
     
     func send(_ data: Data?) {
         if (data != nil) {
             self.dataPackets.enqueue(data!)
+        } else {
+            Logger.trace("No data to send.")
         }
         
         if self.canWrite {
+            Logger.trace("Will write to stream.")
             write()
+        } else {
+            Logger.trace("Cannot write to stream at this moment.")
         }
     }
 }
