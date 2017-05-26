@@ -8,6 +8,8 @@
 
 import Foundation
 
+typealias ParserResponse = (result: Bool, data: Data?, barcode: Barcode?)
+
 class Parser {
     
     private func parseBarcodeScanData(_ data: Data) -> Barcode? {

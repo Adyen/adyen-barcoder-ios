@@ -34,6 +34,8 @@ private enum ScanMode: Int {
     @objc optional func didReceiveLog(message: String)
 }
 
+typealias CommandCompletion = (ParserResponse?, Error?) -> Void
+
 public class Barcoder: NSObject {
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
@@ -41,6 +43,16 @@ public class Barcoder: NSObject {
     private var accessoryConnectionId = -1
     private var isInitialized = false
     private var isDeviceOpen = false
+    
+    //  Command completion
+    private var currentCommandCompletion: CommandCompletion?
+    private var waitingForDeviceOpenResponse = false
+    private var commandResponseTimer: Timer?
+    
+    //  Re-open device workaround
+    private let reopenDeviceMaxCount = 3
+    private let reopenDeviceTimeInterval: TimeInterval = 5
+    private var reopenDeviceCurrentCount = 0
     
     public static let sharedInstance = Barcoder()
     
@@ -108,9 +120,14 @@ public class Barcoder: NSObject {
         
         accessoryStreamer.onAccessoryConnected = { [weak self] accessory in
             if accessory.connectionID != self?.accessoryConnectionId {
+                Logger.trace("Set isDeviceOpen to false.")
                 self?.isDeviceOpen = false
                 self?.accessoryConnectionId = accessory.connectionID
+                self?.reopenDeviceCurrentCount = 0
                 self?.openDevice()
+            } else {
+                let isOpen = self?.isDeviceOpen ?? false
+                Logger.trace("Leave isDeviceOpen set to \(isOpen).")
             }
         }
         
@@ -147,7 +164,55 @@ public class Barcoder: NSObject {
     
     private func openDevice() {
         Logger.debug("Will send open device command")
-        sendCommand(.BAR_DEV_OPEN)
+        
+        waitingForDeviceOpenResponse = true
+        
+        if let timer = commandResponseTimer {
+            timer.invalidate()
+        }
+        commandResponseTimer = Timer.scheduledTimer(
+            timeInterval: 5,
+            target: self,
+            selector: #selector(self.commandDidTimeout),
+            userInfo: nil,
+            repeats: false
+        )
+        
+        sendCommand(.BAR_DEV_OPEN) { response, error in
+            
+            self.commandResponseTimer?.invalidate()
+            self.waitingForDeviceOpenResponse = false
+            
+            let result = response?.result ?? false
+            Logger.debug("Open device command did finish.")
+            Logger.debug("Open device command result: \(result)")
+            if self.currentCommand == .BAR_DEV_OPEN && result == true {
+                self.didOpenDevice()
+                
+                //  Reconnect if neeeded
+                self.reopenDeviceCurrentCount += 1
+                if self.reopenDeviceCurrentCount < self.reopenDeviceMaxCount {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + self.reopenDeviceTimeInterval) {
+                        self.openDevice()
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func commandDidTimeout(_ timer: Timer) {
+        Logger.trace("Command did timeout.")
+        
+        //  Do not continue if device is not open
+        if accessoryStreamer?.deviceStatus != .open {
+            Logger.trace("Accessory streamer device state is not open, stop reconnecting.")
+            waitingForDeviceOpenResponse = false
+            return
+        }
+        
+        if waitingForDeviceOpenResponse {
+            openDevice()
+        }
     }
     
     private func closeDevice() {
@@ -184,8 +249,16 @@ public class Barcoder: NSObject {
     }
     
     private func sendCommand(_ cmd: Barcoder.Cmd) {
+        sendCommand(cmd) { response, error in
+            let result = response?.result ?? false
+            Logger.trace("Send command completion, result: \(result).")
+        }
+    }
+    
+    private func sendCommand(_ cmd: Barcoder.Cmd, completion: @escaping (ParserResponse?, Error?) -> Void) {
         Logger.trace("Will send command: \(cmd.rawValue)")
         currentCommand = cmd
+        currentCommandCompletion = completion
         accessoryStreamer?.send(packCommand(cmd, data: nil))
     }
     
@@ -199,14 +272,12 @@ public class Barcoder: NSObject {
         let res = Parser().parseResponse(data)
         Logger.trace("res: \(res.result), data: \(res.data?.hexEncodedString() ?? "" )")
         
+        currentCommandCompletion?(res, nil)
+
         if let barcode = res.barcode {
             Logger.info("Did scan barcode: \(barcode.text)")
             delegate?.didScan(barcode: barcode)
-        }
-        
-        if currentCommand == .BAR_DEV_OPEN {
-            didOpenDevice()
-        }
+        }        
     }
     
     private func didOpenDevice() {
