@@ -65,4 +65,10 @@ class ViewController: UIViewController, BarcoderDelegate {
         default: break
         }
     }
+    
+    @IBAction func clear(_ sender: Any) {
+        logTextView.text = nil
+        barcodeText.text = nil
+    }
+    
 }
