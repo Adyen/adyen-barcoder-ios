@@ -50,7 +50,7 @@ public class Barcoder: NSObject {
     private var commandResponseTimer: Timer?
     
     //  Re-open device workaround
-    private let reopenDeviceMaxCount = 3
+    private let reopenDeviceMaxCount = 5
     private let reopenDeviceTimeInterval: TimeInterval = 5
     private var reopenDeviceCurrentCount = 0
     
