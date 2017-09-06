@@ -49,11 +49,6 @@ public class Barcoder: NSObject {
     private var waitingForDeviceOpenResponse = false
     private var commandResponseTimer: Timer?
     
-    //  Re-open device workaround
-    private let reopenDeviceMaxCount = 0
-    private let reopenDeviceTimeInterval: TimeInterval = 5
-    private var reopenDeviceCurrentCount = 0
-    
     public static let sharedInstance = Barcoder()
     
     public var delegate: BarcoderDelegate? {
@@ -123,7 +118,6 @@ public class Barcoder: NSObject {
                 Logger.trace("Set isDeviceOpen to false.")
                 self?.isDeviceOpen = false
                 self?.accessoryConnectionId = accessory.connectionID
-                self?.reopenDeviceCurrentCount = 0
                 self?.openDevice()
             } else {
                 let isOpen = self?.isDeviceOpen ?? false
@@ -188,14 +182,6 @@ public class Barcoder: NSObject {
             Logger.debug("Open device command result: \(result)")
             if self.currentCommand == .BAR_DEV_OPEN && result == true {
                 self.didOpenDevice()
-                
-                //  Reconnect if neeeded
-                self.reopenDeviceCurrentCount += 1
-                if self.reopenDeviceCurrentCount < self.reopenDeviceMaxCount {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + self.reopenDeviceTimeInterval) {
-                        self.openDevice()
-                    }
-                }
             }
         }
     }
