@@ -5,7 +5,7 @@ target 'AdyenBarcode_Example' do
 
   target 'AdyenBarcode_Tests' do
     inherit! :search_paths
-
+    pod 'AdyenBarcoder', :path => '../'
     
   end
 end

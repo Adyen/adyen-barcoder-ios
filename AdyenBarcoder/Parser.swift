@@ -12,23 +12,30 @@ typealias ParserResponse = (result: Bool, data: Data?, barcode: Barcode?)
 
 class Parser {
     
-    private func parseBarcodeScanData(_ data: Data) -> Barcode? {
-        // 0x80000000
-        // CodeId AimId SymbolName ScanData
+    private func parseBarcodeScanData(_ data: Data?) -> Barcode? {
+        guard let data = data else {
+            return nil
+        }
+        
         let format = ">HBB*"
-        do {
-            let res = try unpack(format, data)
-            let scanData = String(data: res[3] as! Data, encoding: .ascii)
+        
+        let res = try? unpack(format, data)
+        
+        if let res = res, let responseData = res[3] as? Data {
+            let scanData = String(data: responseData, encoding: .ascii)
             Logger.trace("parseBarcodeScanData: \(res), barcode: \(scanData ?? "")")
             
-            let barcode = Barcode()
-            barcode.codeId = Barcoder.CodeId(rawValue: res[2] as! UInt8) ?? .Undefined
-            barcode.aimId  = Barcoder.AimId(rawValue: res[1] as! UInt8) ?? .Undefined
-            barcode.symbolId = Barcoder.SymId(rawValue: res[0] as! UInt16) ?? .Undefined
-            barcode.text = String(data: res[3] as! Data, encoding: .ascii) ?? ""
-            
-            return barcode
-        } catch {}
+            if let textData = res[3] as? Data {
+                let barcode = Barcode()
+                
+                barcode.codeId = Barcoder.CodeId(rawValue: res[2] as? UInt8 ?? 0) ?? .Undefined
+                barcode.aimId  = Barcoder.AimId(rawValue: res[1] as? UInt8 ?? 0) ?? .Undefined
+                barcode.symbolId = Barcoder.SymId(rawValue: res[0] as? UInt16 ?? 0) ?? .Undefined
+                barcode.text = String(data: textData, encoding: .ascii) ?? ""
+                
+                return barcode
+            }
+        }
         return nil
     }
     
@@ -49,17 +56,19 @@ class Parser {
             let res = try unpack(format, data)
             Logger.trace("res: \(res)")
             
-            let status = Barcoder.Resp(rawValue: res[2] as! UInt32)!
-            switch status {
-            case .ACK:
-                ok = true
-            case .NAK:
+            if let rawValue = res[2] as? UInt32, let status = Barcoder.Resp(rawValue: rawValue) {
+                switch status {
+                case .ACK, .STATUS:
+                    ok = true
+                case .NAK:
+                    ok = false
+                case .DATA:
+                    barcode = parseBarcodeScanData(res[3] as? Data)
+                    ok = barcode != nil
+                }
+            } else {
+                Logger.error("Can't parse data: \(data.hexEncodedString())")
                 ok = false
-            case .DATA:
-                ok = true
-                barcode = parseBarcodeScanData(res[3] as! Data)
-            case .STATUS:
-                ok = true
             }
             
             if res.count == 4 {
