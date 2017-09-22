@@ -143,6 +143,7 @@ public class Barcoder: NSObject {
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         accessoryStreamer?.disconnect()
     }
     

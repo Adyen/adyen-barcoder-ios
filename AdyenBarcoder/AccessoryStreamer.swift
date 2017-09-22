@@ -13,7 +13,7 @@ enum DeviceStatus {
     case disconnected, closed, opening, open
 }
 
-class AccessoryStreamer : Streamer {
+class AccessoryStreamer: Streamer {
     private let maxRetries = 6
     private let delayBetweenRetriesInMillis = 500
     private var session: EASession?
@@ -42,6 +42,7 @@ class AccessoryStreamer : Streamer {
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         disconnect()
     }
     
