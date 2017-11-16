@@ -80,3 +80,32 @@ It's possible to customize the barcoder symbology with `setSymbology(enabled:)` 
 barcoder.setSymbology(.EN_CODE11, enabled: true)
 ```
 The full list of accepted symbology can be found on `SymPid` enum.
+
+## Example usage in Objective-C
+
+```obj-c
+    // Do not forget to put in Podfile:
+    // use_frameworks!
+    // pod "AdyenBarcoder"
+
+#import <AdyenBarcoder/AdyenBarcoder-Swift.h>
+
+@interface ViewController () <BarcoderDelegate>
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // Initialize
+    [Barcoder sharedInstance].delegate = self;
+}
+
+// Did scanned
+- (void)didScanWithBarcode:(Barcode * _Nonnull)barcode {
+    NSLog(@"Scanned barcode: %@", barcode.text);
+}
+
+@end
+```
