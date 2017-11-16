@@ -84,9 +84,13 @@ The full list of accepted symbology can be found on `SymPid` enum.
 ## Example usage in Objective-C
 
 ```obj-c
+    //
     // Do not forget to put in Podfile:
     // use_frameworks!
     // pod "AdyenBarcoder"
+    //
+    // And put in Info.plist file:
+    // "com.verifone.pmr.barcode" in the "Supported external accessory protocols"
 
 #import <AdyenBarcoder/AdyenBarcoder-Swift.h>
 
