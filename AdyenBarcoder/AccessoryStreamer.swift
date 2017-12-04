@@ -72,7 +72,7 @@ class AccessoryStreamer: Streamer {
     }
     
     func openSession() {
-        guard isOpeningSession == false else { return }
+        guard isOpeningSession == false, deviceStatus != .open else { return }
         
         isOpeningSession = true
         
