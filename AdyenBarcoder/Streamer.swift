@@ -182,7 +182,7 @@ class Streamer: NSObject, StreamDelegate {
         }
     }
     
-    func wasReadDidTimeout(_ timer: Timer) {
+    @objc func wasReadDidTimeout(_ timer: Timer) {
         Logger.trace("Bytes stream did timeout to receive response bytes.")
         wasRead = true
     }

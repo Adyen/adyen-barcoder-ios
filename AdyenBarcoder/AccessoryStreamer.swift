@@ -149,7 +149,7 @@ class AccessoryStreamer: Streamer {
         }
     }
     
-    func accessoryDidConnectNotification(_ notification: NSNotification) {
+    @objc func accessoryDidConnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         
         Logger.debug("Received accesoryDidConnectNotification with: \(accessory.description)")
@@ -164,7 +164,7 @@ class AccessoryStreamer: Streamer {
         }
     }
     
-    func accessoryDidDisconnectNotification(_ notification: NSNotification) {
+    @objc func accessoryDidDisconnectNotification(_ notification: NSNotification) {
         let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
         Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
         deviceStatus = .disconnected
