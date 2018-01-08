@@ -14,5 +14,5 @@ Library to connect and use Verifone Barcode reader over MFi connection
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'AdyenBarcoder/*'
+  s.source_files = 'AdyenBarcoder/*.swift'
 end
