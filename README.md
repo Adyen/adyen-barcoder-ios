@@ -7,14 +7,16 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-### CocoaPods
+### Cocoapods
 
-AdyenBarcode will be available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+1. Add `pod 'AdyenBarcoder'` to your `Podfile`.
+2. Run `pod install`.
 
-```ruby
-pod "AdyenBarcoder"
-```
+### Carthage
+
+1. Add `github "adyen/adyen-barcoder-ios"` to your `Cartfile`.
+2. Run `carthage update`.
+3. Link the framework with your target as described in [Carthage Readme](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ### Manual
 
