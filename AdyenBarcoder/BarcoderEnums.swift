@@ -9,7 +9,7 @@
 import Foundation
 import CoreFoundation
 
-@objc
+@objcMembers
 public class Barcode: NSObject {
     public var codeId: Barcoder.CodeId = .Undefined
     public var aimId: Barcoder.AimId = .Undefined

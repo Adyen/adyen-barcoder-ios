@@ -29,13 +29,14 @@ private enum ScanMode: Int {
 }
 
 @objc public protocol BarcoderDelegate {
-    func didScan(barcode: Barcode)
+    @objc func didScan(barcode: Barcode)
     @objc optional func didChange(status: BarcoderStatus)
     @objc optional func didReceiveLog(message: String)
 }
 
 typealias CommandCompletion = (ParserResponse?, Error?) -> Void
 
+@objcMembers
 public class Barcoder: NSObject {
     private let accessoryProtocol = "com.verifone.pmr.barcode"
     private var accessoryStreamer: AccessoryStreamer?
