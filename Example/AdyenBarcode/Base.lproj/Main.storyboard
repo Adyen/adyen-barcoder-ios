@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="htm-12-TuB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="htm-12-TuB">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -65,11 +66,51 @@
                                         </constraints>
                                     </stackView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="5bY-bf-fW8">
-                                        <rect key="frame" x="0.0" y="75" width="300" height="356"/>
+                                        <rect key="frame" x="0.0" y="75" width="300" height="281"/>
                                         <color key="backgroundColor" red="0.98204744170984459" green="0.98204744170984459" blue="0.98204744170984459" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Barcoder Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8qc-cN-aUc">
+                                        <rect key="frame" x="0.0" y="356" width="300" height="25"/>
+                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="Duh-cq-k7w"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iV6-W3-xlt">
+                                        <rect key="frame" x="0.0" y="381" width="300" height="50"/>
+                                        <subviews>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xWH-Vn-Vw4">
+                                                <rect key="frame" x="0.0" y="0.0" width="300" height="41"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="Fc4-vp-7eh"/>
+                                                </constraints>
+                                                <segments>
+                                                    <segment title="Both"/>
+                                                    <segment title="Hard"/>
+                                                    <segment title="Soft"/>
+                                                    <segment title="Disabled"/>
+                                                </segments>
+                                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <connections>
+                                                    <action selector="didChangeBarcoderMode:" destination="htm-12-TuB" eventType="valueChanged" id="ESy-gg-04o"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FzH-DO-xE9">
+                                                <rect key="frame" x="0.0" y="40" width="300" height="10"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="10" id="gJu-ZR-JOZ"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="FzH-DO-xE9" firstAttribute="top" secondItem="xWH-Vn-Vw4" secondAttribute="bottom" id="1mD-8S-LnJ"/>
+                                        </constraints>
+                                    </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VtJ-3g-vbn">
                                         <rect key="frame" x="0.0" y="431" width="300" height="25"/>
                                         <subviews>
@@ -119,7 +160,7 @@
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZN-ba-AKu">
                                                         <rect key="frame" x="0.0" y="0.0" width="230" height="55"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <state key="normal" title="Soft scan">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
@@ -134,7 +175,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="60" id="UsI-pF-qYF"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <state key="normal" title="Clear">
                                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </state>

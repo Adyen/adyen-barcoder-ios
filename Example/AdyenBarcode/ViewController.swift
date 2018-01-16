@@ -66,6 +66,16 @@ class ViewController: UIViewController, BarcoderDelegate {
         }
     }
     
+    @IBAction func didChangeBarcoderMode(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0: barcoder.mode = .hardwareAndSofwareButton
+        case 1: barcoder.mode = .hardwareButton
+        case 2: barcoder.mode = .softwareButton
+        case 3: barcoder.mode = .disabled
+        default: break
+        }
+    }
+    
     @IBAction func clear(_ sender: Any) {
         logTextView.text = nil
         barcodeText.text = nil

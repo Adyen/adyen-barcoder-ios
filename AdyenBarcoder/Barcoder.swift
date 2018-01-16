@@ -229,7 +229,6 @@ public class Barcoder: NSObject {
         switch mode {
         case .hardwareButton, .hardwareAndSofwareButton:
             setScan(mode: .hard)
-            sendCommand(.START_SCAN)
         
         case .softwareButton, .disabled:
             setScan(mode: .soft)
@@ -264,7 +263,6 @@ public class Barcoder: NSObject {
         Logger.debug("Stopping soft scan")
         if (mode == .hardwareAndSofwareButton) {
             setScan(mode: .hard)
-            sendCommand(.START_SCAN)
         } else {
             sendCommand(.STOP_SCAN)
         }
@@ -274,6 +272,10 @@ public class Barcoder: NSObject {
     private func setScan(mode: ScanMode) {
         sendCommand(.STOP_SCAN)
         sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, mode.rawValue)
+        
+        if mode == .hard {
+            sendCommand(.START_SCAN)
+        }
     }
 
     private func sendCommand(_ cmd: Barcoder.Cmd) {
