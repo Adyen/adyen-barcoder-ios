@@ -9,9 +9,11 @@
 import Foundation
 import ExternalAccessory
 
-private enum ScanMode: Int {
-    case hard = 1
-    case soft = 2
+@objc public enum BarcoderMode: Int {
+    case hardwareAndSofwareButton //default
+    case hardwareButton
+    case softwareButton
+    case disabled
 }
 
 @objc public enum BarcoderStatus: Int {
@@ -32,6 +34,11 @@ private enum ScanMode: Int {
     @objc func didScan(barcode: Barcode)
     @objc optional func didChange(status: BarcoderStatus)
     @objc optional func didReceiveLog(message: String)
+}
+
+private enum ScanMode: Int {
+    case hard = 1
+    case soft = 2
 }
 
 typealias CommandCompletion = (ParserResponse?, Error?) -> Void
@@ -81,6 +88,12 @@ public class Barcoder: NSObject {
             if status == .ready {
                 configureSimbology()
             }
+        }
+    }
+    
+    public var mode: BarcoderMode = .hardwareAndSofwareButton {
+        didSet {
+            configureBarcoderMode()
         }
     }
     
@@ -212,6 +225,17 @@ public class Barcoder: NSObject {
         sendCommand(.AUTO_BEEP_CONFIG, parameter: GenPid.AUTO_BEEP_MODE.rawValue, 1) //beep
     }
     
+    private func configureBarcoderMode() {
+        switch mode {
+        case .hardwareButton, .hardwareAndSofwareButton:
+            setScan(mode: .hard)
+            sendCommand(.START_SCAN)
+        
+        case .softwareButton, .disabled:
+            setScan(mode: .soft)
+        }
+    }
+    
     public func setSymbology(_ parameter: Barcoder.SymPid, enabled: Bool) {
         setSymbology(parameter, value: enabled ? 1 : 0)
     }
@@ -221,21 +245,37 @@ public class Barcoder: NSObject {
     }
 
     public func startSoftScan() {
+        guard mode == .hardwareAndSofwareButton || mode == .softwareButton else {
+            Logger.debug("Soft can is disabled. Check `mode` variable.")
+            return
+        }
+        
         Logger.debug("Starting soft scan")
-        startScan(mode: .soft)
-    }
-    
-    public func stopSoftScan() {
-        startScan(mode: .hard)
-        Logger.debug("Stopped soft scan")
-    }
-    
-    private func startScan(mode: ScanMode) {
-        sendCommand(.STOP_SCAN)
-        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, mode.rawValue)
+        setScan(mode: .soft)
         sendCommand(.START_SCAN)
     }
     
+    public func stopSoftScan() {
+        guard mode == .hardwareAndSofwareButton || mode == .softwareButton else {
+            Logger.debug("Soft can is disabled. Check `mode` variable.")
+            return
+        }
+        
+        Logger.debug("Stopping soft scan")
+        if (mode == .hardwareAndSofwareButton) {
+            setScan(mode: .hard)
+            sendCommand(.START_SCAN)
+        } else {
+            sendCommand(.STOP_SCAN)
+        }
+        
+    }
+    
+    private func setScan(mode: ScanMode) {
+        sendCommand(.STOP_SCAN)
+        sendCommand(.SET_TRIG_MODE, parameter: GenPid.SET_TRIG_MODE.rawValue, mode.rawValue)
+    }
+
     private func sendCommand(_ cmd: Barcoder.Cmd) {
         sendCommand(cmd) { response, error in
             let result = response?.result ?? false
@@ -277,7 +317,7 @@ public class Barcoder: NSObject {
         }
         configureSimbology()
         configureDefaults()
-        startScan(mode: .hard)
+        configureBarcoderMode()
     }
     
     private func configureSimbology() {
