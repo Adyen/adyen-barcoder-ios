@@ -40,13 +40,29 @@ The only mandatory method is `didScan(barcode:)`. This is where the result of th
 
 ```swift
 @objc public protocol BarcoderDelegate {
-    func didScan(barcode: Barcode)
+    @objc func didScan(barcode: Barcode)
     @objc optional func didChange(status: BarcoderStatus)
     @objc optional func didReceiveLog(message: String)
 }
 ```
 
+### BarcoderMode
+
+Barcoder library supports four modes:
+
+```swift
+@objc public enum BarcoderMode: Int {
+    case hardwareAndSofwareButton // Default mode. Both hardware button and software commands (startSoftScan, stopSoftScan) are enabled.
+    case hardwareButton // Only hardware button is enabled. Calls to software commands will be ignored.
+    case softwareButton // Only software commands are enabled. Clicking the hardware button will not trigger the lights.
+    case disabled // Disabled.
+}
+````
+
+You can set the mode via the `mode` variable on `Barcoder.sharedInstance`. The default value is `.hardwareAndSofwareButton`.
+
 ### SoftScan
+
 For starting a soft scan: 
 ```swift
 barcoder.startSoftScan()
@@ -56,6 +72,9 @@ To stop the soft scan:
 ```swift
 barcoder.stopSoftScan()
 ```
+
+##### Important:
+Remember to allways call `stopSoftScan` after starting a `startSoftScan`.
 
 ### Logging
 

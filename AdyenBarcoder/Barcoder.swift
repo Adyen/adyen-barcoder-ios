@@ -10,7 +10,7 @@ import Foundation
 import ExternalAccessory
 
 @objc public enum BarcoderMode: Int {
-    case hardwareAndSofwareButton //default
+    case hardwareAndSofwareButton // default
     case hardwareButton
     case softwareButton
     case disabled
