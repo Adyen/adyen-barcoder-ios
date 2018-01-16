@@ -73,8 +73,7 @@ To stop the soft scan:
 barcoder.stopSoftScan()
 ```
 
-##### Important:
-Remember to allways call `stopSoftScan` after starting a `startSoftScan`.
+#### Important: Remember to allways call `stopSoftScan` after starting a `startSoftScan`.
 
 ### Logging
 
