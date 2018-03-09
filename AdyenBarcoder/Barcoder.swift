@@ -51,12 +51,13 @@ public class Barcoder: NSObject {
     private var accessoryConnectionId = -1
     private var isInitialized = false
     private var isDeviceOpen = false
+    private var observers: [NSObjectProtocol] = []
     
     //  Command completion
     private var currentCommandCompletion: CommandCompletion?
     private var waitingForDeviceOpenResponse = false
     private var commandResponseTimer: Timer?
-    
+
     public static let sharedInstance = Barcoder()
     
     public var delegate: BarcoderDelegate? {
@@ -111,13 +112,23 @@ public class Barcoder: NSObject {
     }
     
     private func registerForNotifications() {
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidEnterBackground, object: nil, queue: .main) { [weak self] (notification) in
-            self?.disconnect()
+        let didEnterBackgroundObserver = NotificationCenter.default.addObserver(
+            forName: .UIApplicationDidEnterBackground,
+            object: nil,
+            queue: .main) { [weak self] (notification) in
+                guard let strongSelf = self else { return }
+                strongSelf.disconnect()
         }
 
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: .main) { [weak self] (notification) in
-            self?.reconnect()
+        let willEnterForegroundObserver = NotificationCenter.default.addObserver(
+            forName: .UIApplicationWillEnterForeground,
+            object: nil,
+            queue: .main) { [weak self] (notification) in
+                guard let strongSelf = self else { return }
+                strongSelf.reconnect()
         }
+
+        observers += [didEnterBackgroundObserver, willEnterForegroundObserver]
     }
     
     private func run() {
@@ -157,7 +168,7 @@ public class Barcoder: NSObject {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        observers.forEach(NotificationCenter.default.removeObserver(_:))
         accessoryStreamer?.disconnect()
     }
     
