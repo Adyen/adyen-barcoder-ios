@@ -42,6 +42,7 @@ class AccessoryStreamer: Streamer {
     }
     
     deinit {
+        EAAccessoryManager.shared().unregisterForLocalNotifications()
         NotificationCenter.default.removeObserver(self)
         disconnect()
     }
