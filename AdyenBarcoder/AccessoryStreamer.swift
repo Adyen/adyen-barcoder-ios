@@ -151,24 +151,25 @@ class AccessoryStreamer: Streamer {
     }
     
     @objc func accessoryDidConnectNotification(_ notification: NSNotification) {
-        let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
-        
-        Logger.debug("Received accesoryDidConnectNotification with: \(accessory.description)")
-        
-        if !isAccessorySupported(accessory) {
-            Logger.debug("Accessory not supported")
-            return
-        }
-        
-        if accessory.isConnected {
-            connect(accessory)
+        if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory {
+            Logger.debug("Received accesoryDidConnectNotification with: \(accessory.description)")
+            
+            if !isAccessorySupported(accessory) {
+                Logger.debug("Accessory not supported")
+                return
+            }
+            
+            if accessory.isConnected {
+                connect(accessory)
+            }
         }
     }
     
     @objc func accessoryDidDisconnectNotification(_ notification: NSNotification) {
-        let accessory = notification.userInfo?[EAAccessoryKey] as! EAAccessory
-        Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
-        deviceStatus = .disconnected
-        closeSession()
+        if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory {
+            Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
+            deviceStatus = .disconnected
+            closeSession()
+        }
     }
 }
