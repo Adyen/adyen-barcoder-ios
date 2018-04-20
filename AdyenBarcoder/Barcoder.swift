@@ -87,7 +87,7 @@ public class Barcoder: NSObject {
     public var interleaved2Of5 = false {
         didSet {
             if status == .ready {
-                configureSimbology()
+                configureSymbology()
             }
         }
     }
@@ -328,12 +328,13 @@ public class Barcoder: NSObject {
         if let streamer = accessoryStreamer, !streamer.isOpened {
             streamer.openSession()
         }
-        configureSimbology()
+        sendCommand(.RESTORE_DEFAULTS) //Reset
+        configureSymbology()
         configureDefaults()
         configureBarcoderMode()
     }
     
-    private func configureSimbology() {
+    private func configureSymbology() {
         if interleaved2Of5 {
             setSymbology(.EN_EAN13_JAN13, value: 0)
             setSymbology(.EN_INTER2OF5, value: 1)
