@@ -168,8 +168,13 @@ class AccessoryStreamer: Streamer {
     @objc func accessoryDidDisconnectNotification(_ notification: NSNotification) {
         if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory {
             Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
-            deviceStatus = .disconnected
-            closeSession()
+            // Check the accessory was the Adyen device that disconnected. 
+            // If it was - close the session otherwise do nothing. If the e315 hasnt disconnected then
+            // the session should remain open
+            if(accessory.name.contains("PAYWare")){
+                deviceStatus = .disconnected
+                closeSession()
+            }           
         }
     }
 }
