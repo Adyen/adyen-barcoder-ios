@@ -166,7 +166,7 @@ class AccessoryStreamer: Streamer {
     }
     
     @objc func accessoryDidDisconnectNotification(_ notification: NSNotification) {
-        if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory {
+        if let accessory = notification.userInfo?[EAAccessoryKey] as? EAAccessory, isAccessorySupported(accessory) {
             Logger.debug("Received accessoryDidDisconnectNotification with: \(accessory.description)")
             deviceStatus = .disconnected
             closeSession()
