@@ -324,7 +324,6 @@ public class Barcoder: NSObject {
     private func didOpenDevice() {
         Logger.debug("Device Opened")
         isDeviceOpen = true
-        status = .ready
         if let streamer = accessoryStreamer, !streamer.isOpened {
             streamer.openSession()
         }
@@ -332,6 +331,7 @@ public class Barcoder: NSObject {
         configureSymbology()
         configureDefaults()
         configureBarcoderMode()
+        status = .ready
     }
     
     private func configureSymbology() {
