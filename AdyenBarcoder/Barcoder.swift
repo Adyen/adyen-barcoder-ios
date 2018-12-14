@@ -382,6 +382,9 @@ public class Barcoder: NSObject {
         case is [UInt8]:
             let bytes = value as! [UInt8]
             return pack(">BB*", [2 + bytes.count, cmd, Data(bytes: bytes)])
+        case is Data:
+            let data = value as! Data
+            return pack(">BB*", [2 + data.count, cmd, data])
         default:
             return Data()
         }
