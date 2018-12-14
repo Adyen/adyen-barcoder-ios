@@ -67,7 +67,7 @@ class Parser {
                     ok = barcode != nil
                 }
             } else {
-                Logger.error("Can't parse data: \(data.hexEncodedString())")
+                Logger.error("Can't parse data: \(data.hexEncodedString() ?? "")")
                 ok = false
             }
             
@@ -81,7 +81,7 @@ class Parser {
             }
             
         } catch {
-            Logger.error("Can't parse data: \(data.hexEncodedString())")
+            Logger.error("Can't parse data: \(data.hexEncodedString() ?? "")")
             ok = false
         }
         return (ok, resData, barcode)

@@ -49,12 +49,12 @@ class Streamer: NSObject, StreamDelegate {
         
         if let stream = self.inputStream {
             stream.delegate = self
-            stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+            stream.schedule(in: RunLoop.current, forMode: RunLoop.Mode.default)
             stream.open()
         }
         if let stream = self.outputStream {
             stream.delegate = self
-            stream.schedule(in: RunLoop.current, forMode: .defaultRunLoopMode)
+            stream.schedule(in: RunLoop.current, forMode: RunLoop.Mode.default)
             stream.open()
         }
     }
@@ -62,13 +62,13 @@ class Streamer: NSObject, StreamDelegate {
     func closeStreams() {
         if let stream = self.inputStream {
             stream.delegate = nil
-            stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+            stream.remove(from: RunLoop.current, forMode: RunLoop.Mode.default)
             stream.close()
             self.inputOpened = false
         }
         if let stream = self.outputStream {
             stream.delegate = nil
-            stream.remove(from: RunLoop.current, forMode: .defaultRunLoopMode)
+            stream.remove(from: RunLoop.current, forMode: RunLoop.Mode.default)
             stream.close()
             self.outputOpened = false
         }

@@ -113,7 +113,7 @@ public class Barcoder: NSObject {
     
     private func registerForNotifications() {
         let didEnterBackgroundObserver = NotificationCenter.default.addObserver(
-            forName: .UIApplicationDidEnterBackground,
+            forName: UIApplication.didEnterBackgroundNotification,
             object: nil,
             queue: .main) { [weak self] (notification) in
                 guard let strongSelf = self else { return }
@@ -121,7 +121,7 @@ public class Barcoder: NSObject {
         }
 
         let willEnterForegroundObserver = NotificationCenter.default.addObserver(
-            forName: .UIApplicationWillEnterForeground,
+            forName: UIApplication.willEnterForegroundNotification,
             object: nil,
             queue: .main) { [weak self] (notification) in
                 guard let strongSelf = self else { return }
