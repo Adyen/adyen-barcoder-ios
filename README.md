@@ -36,7 +36,7 @@ barcoder.delegate = self
 
 ### BarcoderDelegate
 
-The only mandatory method is `didScan(barcode:)`. This is where the result of the scan will be delivered. You can also receive state updates on `didChange(status:)`. 
+The only mandatory method is `didScan(barcode:)`. This is where the result of the scan will be delivered. You can also receive state updates on `didChange(status:)`.
 
 ```swift
 @objc public protocol BarcoderDelegate {
@@ -63,12 +63,12 @@ You can set the mode via the `mode` variable on `Barcoder.sharedInstance`. The d
 
 ### SoftScan
 
-For starting a soft scan: 
+For starting a soft scan:
 ```swift
 barcoder.startSoftScan()
 ```
 
-To stop the soft scan: 
+To stop the soft scan:
 ```swift
 barcoder.stopSoftScan()
 ```
@@ -77,8 +77,8 @@ barcoder.stopSoftScan()
 
 ### Logging
 
-There are five log levels available: None, Error, Info, Debug, Trace. 
-To set the log level simply set the variable on your `Barcoder` instance: 
+There are five log levels available: None, Error, Info, Debug, Trace.
+To set the log level simply set the variable on your `Barcoder` instance:
 ```swift
 barcoder.logLevel = .debug
 ```
@@ -121,7 +121,7 @@ The full list of accepted symbology can be found on `SymPid` enum.
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     // Initialize
     [Barcoder sharedInstance].delegate = self;
 }

@@ -175,6 +175,11 @@ public class Barcoder: NSObject {
     private func reconnect() {
         Logger.info("Application will enter foreground. Reconnecting Barcoder")
         accessoryStreamer?.openSession()
+        
+        if isDeviceOpen == false, waitingForDeviceOpenResponse == false {
+            Logger.trace("Device is not open and barcoder is not waiting for open device response. Send open device.")
+            openDevice()
+        }
     }
 
     private func disconnect() {
@@ -185,6 +190,7 @@ public class Barcoder: NSObject {
     private func openDevice() {
         Logger.debug("Will send open device command")
         
+        status = .connecting
         waitingForDeviceOpenResponse = true
         
         if let timer = commandResponseTimer {

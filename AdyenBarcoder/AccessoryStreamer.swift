@@ -70,6 +70,7 @@ class AccessoryStreamer: Streamer {
         accessory = nil
         session = nil
         deviceStatus = .closed
+        isOpeningSession = false
     }
     
     func openSession() {
@@ -121,7 +122,9 @@ class AccessoryStreamer: Streamer {
         if retriesLeft >= 0 {
             Logger.debug("Retrying opening session: \(maxRetries - retriesLeft) of \(maxRetries)")
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(delay)) { [weak self] in
-                self?.openSession(retries: retriesLeft)
+                if self?.isOpeningSession == true && self?.deviceStatus != .open {
+                    self?.openSession(retries: retriesLeft)
+                }
             }
         } else {
             deviceStatus = .closed
