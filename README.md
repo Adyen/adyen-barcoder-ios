@@ -1,9 +1,8 @@
 # AdyenBarcoder
-Use Verifone Barcode scanner over MFi
+Use Verifone Barcode scanner over MFi.
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+## Requirements
+iOS 8.0 or higher.
 
 ## Installation
 
@@ -25,6 +24,10 @@ Copy files from `AdyenBarcoder` folder.
 ## Usage
 
 You need to add `com.verifone.pmr.barcode` in the `Supported external accessory protocols` into `Info.plist` file
+
+### Example
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ### Initializing
 
@@ -104,13 +107,13 @@ The full list of accepted symbology can be found on `SymPid` enum.
 ## Example usage in Objective-C
 
 ```obj-c
-    //
-    // Do not forget to put in Podfile:
-    // use_frameworks!
-    // pod "AdyenBarcoder"
-    //
-    // And put in Info.plist file:
-    // "com.verifone.pmr.barcode" in the "Supported external accessory protocols"
+//
+// Do not forget to put in Podfile:
+// use_frameworks!
+// pod "AdyenBarcoder"
+//
+// And put in Info.plist file:
+// "com.verifone.pmr.barcode" in the "Supported external accessory protocols"
 
 #import <AdyenBarcoder/AdyenBarcoder-Swift.h>
 
@@ -133,3 +136,9 @@ The full list of accepted symbology can be found on `SymPid` enum.
 
 @end
 ```
+
+## Support
+If you have any problems, questions or suggestions, create an issue here.
+
+## Licence
+MIT license. For more information, see the LICENSE file.
