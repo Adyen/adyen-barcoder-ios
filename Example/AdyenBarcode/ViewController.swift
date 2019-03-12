@@ -15,11 +15,17 @@ class ViewController: UIViewController, BarcoderDelegate {
     @IBOutlet weak var barcodeText: UILabel!
     @IBOutlet weak var logTextView: UITextView!
     @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var versionLabel: UILabel!
     
     let barcoder = Barcoder.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            versionLabel.text = "v\(version)"
+        }
+        
         barcoder.logLevel = .debug
         barcoder.interleaved2Of5 = false
         barcoder.delegate = self
