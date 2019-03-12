@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'AdyenBarcoder'
-  s.version          = '1.4.1'
+  s.version          = '1.4.2'
   s.summary          = 'Use Verifone Barcode reader over MFi'
 
   s.description      = <<-DESC
